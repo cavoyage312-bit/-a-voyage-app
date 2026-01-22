@@ -72,7 +72,7 @@
             "desc": "Encontre os seus bilhetes de avião, reservas de hotel e bilhetes de metro diretamente no seu telemóvel. Uma experiência fluida, mesmo offline.",
             "downloadOn": "Descarregar na",
             "availableOn": "Disponível no",
-            "ticketValidated": "Bilhete validado",
+            "ticketValidated": "Billete validado",
             "realTime": "Atualização\nem tempo real"
         }
     },
@@ -157,7 +157,7 @@
         "email": "E-mail",
         "phone": "Telefone",
         "birthDate": "Data de nascimento",
-        "nationality": "Nacionalidade",
+        "nationality": "Nacionalidad",
         "passportNumber": "Número do passaporte",
         "passportExpiry": "Validade do passaporte",
         "payment": "Pagamento",
@@ -205,5 +205,13 @@
             "buses": "Autocarros"
         },
         "copyright": "© 2024 ÇA VOYAGE. Todos os direitos reservados."
+    },
+    "cars": {
+        "title": "Aluguer de carros",
+        "search": "Pesquisar carro",
+        "results": "veículos encontrados",
+        "noResults": "Nenhum veículo disponível",
+        "filters": "Filtros",
+        "details": "Detalhes"
     }
 }

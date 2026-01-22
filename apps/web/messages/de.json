@@ -205,5 +205,13 @@
             "buses": "Busse"
         },
         "copyright": "© 2024 ÇA VOYAGE. Alle Rechte vorbehalten."
+    },
+    "cars": {
+        "title": "Mietwagen",
+        "search": "Auto suchen",
+        "results": "Fahrzeuge gefunden",
+        "noResults": "Keine Fahrzeuge verfügbar",
+        "filters": "Filter",
+        "details": "Details"
     }
 }
