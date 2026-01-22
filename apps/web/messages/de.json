@@ -20,6 +20,7 @@
         "hotels": "Hotels",
         "buses": "Busse",
         "cars": "Autos",
+        "groups": "Gruppen",
         "login": "Anmelden",
         "signup": "Registrieren",
         "myBookings": "Meine Buchungen",
@@ -27,11 +28,53 @@
         "logout": "Abmelden"
     },
     "home": {
-        "title": "Reisen ohne Grenzen",
-        "subtitle": "Buchen Sie Flüge, Hotels, Busse und Autos mit wenigen Klicks",
-        "searchPlaceholder": "Wohin möchten Sie reisen?",
+        "title": "Ihre ganze Reise,\nin einer einzigen App.",
+        "subtitle": "Flüge, Hotels, Autos und Stadtverkehr.\nPlanen, buchen und reisen ohne Grenzen.",
+        "searchPlaceholder": "Wohin möchten Sie gehen?",
         "popularDestinations": "Beliebte Reiseziele",
-        "bestDeals": "Beste Angebote"
+        "popularSubtitle": "Die meistgesuchten Reiseziele",
+        "seeAll": "Alle ansehen",
+        "services": {
+            "flights": {
+                "title": "Flüge",
+                "desc": "Bestpreisgarantie"
+            },
+            "hotels": {
+                "title": "Hotels",
+                "desc": "Weltweit"
+            },
+            "cars": {
+                "title": "Autos",
+                "desc": "Mietwagen & Transfers"
+            },
+            "transit": {
+                "title": "Verkehrsmittel",
+                "desc": "Bus, U-Bahn & Routen"
+            }
+        },
+        "features": {
+            "payment": {
+                "title": "Sichere Zahlung",
+                "desc": "100% sichere Transaktionen"
+            },
+            "prices": {
+                "title": "Beste Preise",
+                "desc": "Tiefpreisgarantie"
+            },
+            "support": {
+                "title": "24/7 Support",
+                "desc": "Hilfe zu jeder Zeit"
+            }
+        },
+        "app": {
+            "badge": "Mobile App Verfügbar",
+            "title": "Überall mit Ihnen.",
+            "desc": "Finden Sie Ihre Flugtickets, Hotelreservierungen und U-Bahn-Tickets direkt auf Ihrem Handy. Ein reibungsloses Erlebnis, auch offline.",
+            "downloadOn": "Laden im",
+            "availableOn": "Verfügbar bei",
+            "ticketValidated": "Ticket entwertet",
+            "realTime": "Echtzeit-\nAktualisierung"
+        }
     },
     "flights": {
         "title": "Flug suchen",
@@ -66,7 +109,12 @@
         "sortBy": "Sortieren nach",
         "cheapest": "Günstigster",
         "fastest": "Schnellster",
-        "bestValue": "Bestes Angebot"
+        "bestValue": "Bestes Angebot",
+        "luggage": "Gepäck",
+        "checkedBag": "Aufgegebenes Gepäck",
+        "checkedBags": "Aufgegebenes Gepäck",
+        "handBag": "Handgepäck",
+        "handBags": "Handgepäck"
     },
     "hotels": {
         "title": "Hotel suchen",
@@ -136,11 +184,26 @@
         "signupSuccess": "Erfolgreich registriert"
     },
     "footer": {
+        "tagline": "Gemeinsam reisen, ganz einfach.",
+        "description": "Ihr Reisepartner für Afrika und Europa. Buchen Sie Flüge, Hotels, Busse und Autos mit nur wenigen Klicks.",
+        "services": "Dienstleistungen",
+        "company": "Unternehmen",
+        "support": "Support",
         "about": "Über uns",
         "contact": "Kontakt",
+        "partners": "Partner",
+        "careers": "Karriere",
         "help": "Hilfe",
+        "faq": "FAQ",
         "terms": "AGB",
         "privacy": "Datenschutz",
+        "carRentals": "Mietwagen",
+        "groupTrips": "Gruppenreisen",
+        "services_list": {
+            "flights": "Flüge",
+            "hotels": "Hotels",
+            "buses": "Busse"
+        },
         "copyright": "© 2024 ÇA VOYAGE. Alle Rechte vorbehalten."
     }
 }

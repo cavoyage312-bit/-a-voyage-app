@@ -20,6 +20,7 @@
         "hotels": "Hoteles",
         "buses": "Autobuses",
         "cars": "Coches",
+        "groups": "Grupos",
         "login": "Iniciar sesión",
         "signup": "Registrarse",
         "myBookings": "Mis reservas",
@@ -27,11 +28,53 @@
         "logout": "Cerrar sesión"
     },
     "home": {
-        "title": "Viaja sin límites",
-        "subtitle": "Reserva vuelos, hoteles, autobuses y coches en pocos clics",
+        "title": "Todo tu viaje,\nen una sola app.",
+        "subtitle": "Vuelos, Hoteles, Coches y Transportes Urbanos.\nPlanifica, reserva y viaja sin límites.",
         "searchPlaceholder": "¿A dónde quieres ir?",
         "popularDestinations": "Destinos populares",
-        "bestDeals": "Mejores ofertas"
+        "popularSubtitle": "Los destinos más buscados",
+        "seeAll": "Ver todo",
+        "services": {
+            "flights": {
+                "title": "Vuelos",
+                "desc": "Mejores tarifas garantizadas"
+            },
+            "hotels": {
+                "title": "Hoteles",
+                "desc": "En todo el mundo"
+            },
+            "cars": {
+                "title": "Coches",
+                "desc": "Alquiler y traslados"
+            },
+            "transit": {
+                "title": "Transportes",
+                "desc": "Autobús, Metro e Itinerarios"
+            }
+        },
+        "features": {
+            "payment": {
+                "title": "Pago seguro",
+                "desc": "Transacciones 100% seguras"
+            },
+            "prices": {
+                "title": "Mejores precios",
+                "desc": "Garantía de precio más bajo"
+            },
+            "support": {
+                "title": "Soporte 24/7",
+                "desc": "Asistencia en cualquier momento"
+            }
+        },
+        "app": {
+            "badge": "Aplicación Móvil Disponible",
+            "title": "En todas partes contigo.",
+            "desc": "Encuentra tus billetes de avión, reservas de hotel y tickets de metro directamente en tu móvil. Una experiencia fluida, incluso sin conexión.",
+            "downloadOn": "Descargar en",
+            "availableOn": "Disponible en",
+            "ticketValidated": "Billete validado",
+            "realTime": "Actualización\nen tiempo real"
+        }
     },
     "flights": {
         "title": "Buscar vuelo",
@@ -66,7 +109,12 @@
         "sortBy": "Ordenar por",
         "cheapest": "Más barato",
         "fastest": "Más rápido",
-        "bestValue": "Mejor relación"
+        "bestValue": "Mejor relación",
+        "luggage": "Equipaje",
+        "checkedBag": "Equipaje facturado",
+        "checkedBags": "Equipaje facturado",
+        "handBag": "Equipaje de mano",
+        "handBags": "Equipaje de mano"
     },
     "hotels": {
         "title": "Buscar hotel",
@@ -136,11 +184,26 @@
         "signupSuccess": "Registro completado"
     },
     "footer": {
+        "tagline": "Viajar juntos, de forma sencilla.",
+        "description": "Tu compañero de viaje para África y Europa. Reserva vuelos, hoteles, autobuses y coches en pocos clics.",
+        "services": "Servicios",
+        "company": "Empresa",
+        "support": "Soporte",
         "about": "Sobre nosotros",
         "contact": "Contacto",
+        "partners": "Socios",
+        "careers": "Carreras",
         "help": "Ayuda",
+        "faq": "FAQ",
         "terms": "Términos y condiciones",
         "privacy": "Política de privacidad",
+        "carRentals": "Alquiler de coches",
+        "groupTrips": "Viajes en grupo",
+        "services_list": {
+            "flights": "Vuelos",
+            "hotels": "Hoteles",
+            "buses": "Autobuses"
+        },
         "copyright": "© 2024 ÇA VOYAGE. Todos los derechos reservados."
     }
 }

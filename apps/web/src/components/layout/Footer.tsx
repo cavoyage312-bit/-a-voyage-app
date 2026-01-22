@@ -21,22 +21,23 @@ export function Footer() {
     const locale = params.locale as string;
 
     const services = [
-        { label: 'Vols', href: `/${locale}/flights` },
-        { label: 'Hôtels', href: `/${locale}/hotels` },
-        { label: 'Bus', href: `/${locale}/buses` },
-        { label: 'Location voitures', href: `/${locale}/cars` },
+        { label: t('services_list.flights'), href: `/${locale}/flights` },
+        { label: t('services_list.hotels'), href: `/${locale}/hotels` },
+        { label: t('services_list.buses'), href: `/${locale}/buses` },
+        { label: t('carRentals'), href: `/${locale}/cars` },
+        { label: t('groupTrips'), href: `/${locale}/groups` },
     ];
 
     const company = [
         { label: t('about'), href: `/${locale}/about` },
         { label: t('contact'), href: `/${locale}/contact` },
-        { label: 'Partenaires', href: `/${locale}/partners` },
-        { label: 'Carrières', href: `/${locale}/careers` },
+        { label: t('partners'), href: `/${locale}/partners` },
+        { label: t('careers'), href: `/${locale}/careers` },
     ];
 
     const support = [
         { label: t('help'), href: `/${locale}/help` },
-        { label: 'FAQ', href: `/${locale}/faq` },
+        { label: t('faq'), href: `/${locale}/faq` },
         { label: t('terms'), href: `/${locale}/terms` },
         { label: t('privacy'), href: `/${locale}/privacy` },
     ];
@@ -66,12 +67,11 @@ export function Footer() {
                             </div>
                             <div>
                                 <span className="text-xl font-bold font-display">Ça Voyage</span>
-                                <p className="text-xs text-slate-400">Voyagez ensemble, simplement.</p>
+                                <p className="text-xs text-slate-400">{t('tagline')}</p>
                             </div>
                         </Link>
                         <p className="text-slate-400 text-sm mb-6 max-w-xs">
-                            Votre partenaire de voyage pour l'Afrique et l'Europe.
-                            Réservez vols, hôtels, bus et voitures en quelques clics.
+                            {t('description')}
                         </p>
 
                         {/* Contact - Mobile friendly */}
@@ -90,11 +90,11 @@ export function Footer() {
                     {/* Services */}
                     <div>
                         <h4 className="font-semibold text-sm uppercase tracking-wider text-slate-300 mb-4">
-                            Services
+                            {t('services')}
                         </h4>
                         <ul className="space-y-2.5">
                             {services.map((item) => (
-                                <li key={item.href}>
+                                <li key={item.label}>
                                     <Link
                                         href={item.href}
                                         className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"
@@ -110,11 +110,11 @@ export function Footer() {
                     {/* Company */}
                     <div>
                         <h4 className="font-semibold text-sm uppercase tracking-wider text-slate-300 mb-4">
-                            Entreprise
+                            {t('company')}
                         </h4>
                         <ul className="space-y-2.5">
                             {company.map((item) => (
-                                <li key={item.href}>
+                                <li key={item.label}>
                                     <Link
                                         href={item.href}
                                         className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"
@@ -130,11 +130,11 @@ export function Footer() {
                     {/* Support */}
                     <div>
                         <h4 className="font-semibold text-sm uppercase tracking-wider text-slate-300 mb-4">
-                            Support
+                            {t('support')}
                         </h4>
                         <ul className="space-y-2.5">
                             {support.map((item) => (
-                                <li key={item.href}>
+                                <li key={item.label}>
                                     <Link
                                         href={item.href}
                                         className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"

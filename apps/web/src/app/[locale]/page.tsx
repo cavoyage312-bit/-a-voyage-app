@@ -15,7 +15,9 @@ import {
     Plane,
     Building2,
     Car,
-    Train
+    Train,
+    Sparkles,
+    CheckCircle2
 } from 'lucide-react';
 import { PartnerBanner } from '@/components/layout/PartnerBanner';
 
@@ -27,8 +29,8 @@ export default function HomePage() {
     const services = [
         {
             id: 'flights',
-            title: 'Vols',
-            desc: 'Meilleurs tarifs garantis',
+            title: t('services.flights.title'),
+            desc: t('services.flights.desc'),
             icon: Plane,
             href: `/${locale}/flights`,
             color: 'bg-blue-500',
@@ -36,8 +38,8 @@ export default function HomePage() {
         },
         {
             id: 'hotels',
-            title: 'Hôtels',
-            desc: 'Partout dans le monde',
+            title: t('services.hotels.title'),
+            desc: t('services.hotels.desc'),
             icon: Building2,
             href: `/${locale}/hotels`,
             color: 'bg-emerald-500',
@@ -45,8 +47,8 @@ export default function HomePage() {
         },
         {
             id: 'cars',
-            title: 'Voitures',
-            desc: 'Location & Transferts',
+            title: t('services.cars.title'),
+            desc: t('services.cars.desc'),
             icon: Car,
             href: `/${locale}/cars`,
             color: 'bg-amber-500',
@@ -54,8 +56,8 @@ export default function HomePage() {
         },
         {
             id: 'transit',
-            title: 'Transports',
-            desc: 'Bus, Métro & Itinéraires',
+            title: t('services.transit.title'),
+            desc: t('services.transit.desc'),
             icon: Train,
             href: `/${locale}/transit`,
             color: 'bg-purple-500',
@@ -64,9 +66,9 @@ export default function HomePage() {
     ];
 
     const features = [
-        { icon: Shield, title: 'Paiement sécurisé', desc: 'Transactions 100% sécurisées' },
-        { icon: CreditCard, title: 'Meilleurs prix', desc: 'Garantie du prix le plus bas' },
-        { icon: Headphones, title: 'Support 24/7', desc: 'Assistance à tout moment' },
+        { icon: Shield, title: t('features.payment.title'), desc: t('features.payment.desc') },
+        { icon: CreditCard, title: t('features.prices.title'), desc: t('features.prices.desc') },
+        { icon: Headphones, title: t('features.support.title'), desc: t('features.support.desc') },
     ];
 
     const destinations = [
@@ -123,19 +125,18 @@ export default function HomePage() {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold text-white mb-6 tracking-tight"
                         >
-                            Tout votre voyage,<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
-                                dans une seule app.
-                            </span>
+                            {t.rich('title', {
+                                br: () => <br />,
+                                span: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">{chunks}</span>
+                            })}
                         </motion.h1>
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-lg text-slate-300 max-w-2xl mx-auto"
+                            className="text-lg text-slate-300 max-w-2xl mx-auto whitespace-pre-line"
                         >
-                            Vols, Hôtels, Voitures et Transports urbains.
-                            Planifiez, réservez et voyagez sans limites.
+                            {t('subtitle')}
                         </motion.p>
                     </div>
 
@@ -187,14 +188,14 @@ export default function HomePage() {
                                 {t('popularDestinations')}
                             </h2>
                             <p className="text-slate-500 mt-1 sm:mt-2 text-sm sm:text-base">
-                                Les destinations les plus recherchées
+                                {t('popularSubtitle')}
                             </p>
                         </div>
                         <Link
                             href={`/${locale}/flights`}
                             className="text-primary-700 font-semibold hover:text-primary-800 flex items-center gap-1 text-sm sm:text-base self-start sm:self-auto"
                         >
-                            Voir tout <ArrowRight className="w-4 h-4" />
+                            {t('seeAll')} <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
 
@@ -250,21 +251,44 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section className="py-16 bg-white border-t border-slate-100">
-                <div className="container-custom">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {/* Features Section - Premium Redesign */}
+            <section className="py-24 bg-slate-50/50 relative overflow-hidden">
+                {/* Decorative background blur */}
+                <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 bg-primary-100 rounded-full blur-[100px] opacity-60" />
+                <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-teal-50 rounded-full blur-[120px] opacity-50" />
+
+                <div className="container-custom relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
                         {features.map((feature, index) => (
-                            <div
+                            <motion.div
                                 key={index}
-                                className="flex flex-col items-center text-center p-6 rounded-2xl hover:bg-slate-50 transition-colors"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.15, duration: 0.6 }}
                             >
-                                <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mb-4">
-                                    <feature.icon className="w-8 h-8 text-primary-600" />
+                                <div className="group relative bg-white/70 backdrop-blur-xl border border-white p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2">
+                                    <div className="relative mb-8">
+                                        {/* Icon Gloow */}
+                                        <div className="absolute inset-0 bg-primary-500/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                        <div className="relative w-20 h-20 mx-auto bg-gradient-to-br from-primary-50 to-emerald-50 rounded-3xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                            <feature.icon className="w-10 h-10 text-primary-600 drop-shadow-sm" />
+                                        </div>
+                                    </div>
+
+                                    <h3 className="font-display font-black text-2xl text-slate-900 mb-4 tracking-tight">
+                                        {feature.title}
+                                    </h3>
+
+                                    <p className="text-slate-500 leading-relaxed font-medium">
+                                        {feature.desc}
+                                    </p>
+
+                                    {/* Subtle bottom accent line */}
+                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-primary-400 to-emerald-400 rounded-full group-hover:w-1/3 transition-all duration-500" />
                                 </div>
-                                <h3 className="font-bold text-lg text-slate-900 mb-2">{feature.title}</h3>
-                                <p className="text-slate-500">{feature.desc}</p>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
@@ -273,41 +297,116 @@ export default function HomePage() {
             {/* Partner Banner - Nouveau CTA */}
             <PartnerBanner locale={locale} />
 
-            {/* CTA App Mobile (Optionnel) */}
-            <section className="py-20 bg-slate-900 text-white overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-gradient-to-l from-primary-500 to-transparent"></div>
-                <div className="container-custom relative z-10 flex flex-col md:flex-row items-center gap-12">
-                    <div className="flex-1 text-center md:text-left">
-                        <h2 className="text-3xl md:text-4xl font-bold font-display mb-4">Partout avec vous.</h2>
-                        <p className="text-slate-400 text-lg mb-8 max-w-md mx-auto md:mx-0">
-                            Retrouvez vos billets d'avion, vos réservations d'hôtel et vos tickets de métro directement sur votre mobile.
+            {/* CTA App Mobile - Version Premium */}
+            <section className="py-24 lg:py-32 bg-slate-950 text-white overflow-hidden relative">
+                {/* Background effects */}
+                <div className="absolute top-0 right-0 w-full h-full opacity-20 pointer-events-none">
+                    <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary-500 rounded-full blur-[150px]" />
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500 rounded-full blur-[120px]" />
+                </div>
+
+                <div className="container-custom relative z-10 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="flex-1 text-center lg:text-left"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-primary-400 text-sm font-bold mb-6">
+                            <Sparkles className="w-4 h-4" />
+                            <span>{t('app.badge')}</span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-display mb-6 tracking-tight leading-[1.1]">
+                            {t.rich('app.title', {
+                                br: () => <br className="hidden lg:block" />,
+                                span: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">{chunks}</span>
+                            })}
+                        </h2>
+                        <p className="text-slate-400 text-lg md:text-xl mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            {t('app.desc')}
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                            <button className="bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors flex items-center gap-2">
-                                <span className="text-xl"></span> App Store
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <button className="group bg-white text-slate-950 px-8 py-4 rounded-2xl font-black hover:bg-slate-100 transition-all flex items-center justify-center gap-3 shadow-xl hover:shadow-primary-500/20 active:scale-95">
+                                <svg className="w-6 h-6" viewBox="0 0 384 512" fill="currentColor">
+                                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 21.8-88.5 21.8-11.4 0-51.1-22.2-84.6-21.8-44 1.2-84.6 25.9-107.4 65.5-46.6 81.6-11.9 202.9 33.1 268.3 22 31.8 48.4 67 82.2 65.7 32.1-1.3 44.3-20.7 83.1-20.7 38.4 0 49.3 20.7 83.1 20.1 34.5-.6 57.3-31.1 79.4-63.1 25.4-36.8 35.8-72.5 36.1-74.4-1-.4-69.5-26.7-69.6-106.3zM281.2 87.6c19-23 31.8-55 28.3-87.6-28.1 1.1-62.1 18.7-82.3 42.4-18.1 21-33.8 53.6-29.5 85.1 31.2 2.4 63.8-17.1 83.5-39.9z" />
+                                </svg>
+                                <div className="text-left">
+                                    <p className="text-[10px] uppercase font-bold text-slate-500 leading-none mb-0.5">{t('app.downloadOn')}</p>
+                                    <p className="text-base leading-none">App Store</p>
+                                </div>
                             </button>
-                            <button className="bg-transparent border border-white/30 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/10 transition-colors flex items-center gap-2">
-                                <span className="text-xl">🤖</span> Google Play
+
+                            <button className="group bg-slate-800 text-white px-8 py-4 rounded-2xl font-black hover:bg-slate-700 transition-all flex items-center justify-center gap-3 border border-white/5 shadow-xl active:scale-95">
+                                <svg className="w-6 h-6" viewBox="0 0 512 512" fill="currentColor">
+                                    <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3L272.9 256 47 0zm421.7 205.1l-65.7-37.7L339 231.7l129.7 129.7c18.8-10.5 31.3-30.8 31.3-54 0-23.3-12.6-43.7-31.3-54.1zm-143.4 121.3l-123.6 123.6L385.4 350l-60.1-23.6z" />
+                                </svg>
+                                <div className="text-left">
+                                    <p className="text-[10px] uppercase font-bold text-slate-500 leading-none mb-0.5">{t('app.availableOn')}</p>
+                                    <p className="text-base leading-none">Google Play</p>
+                                </div>
                             </button>
                         </div>
-                    </div>
-                    <div className="flex-1 relative">
-                        {/* Mock Phone simplified */}
-                        <div className="relative w-64 h-[500px] bg-slate-800 rounded-[3rem] border-8 border-slate-700 mx-auto shadow-2xl overflow-hidden">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-700 rounded-b-xl z-20"></div>
-                            <div className="w-full h-full bg-slate-900 relative">
-                                {/* Screen Content */}
-                                <div className="p-6 pt-12 space-y-4">
-                                    <div className="h-8 w-3/4 bg-slate-700 rounded mb-6"></div>
-                                    <div className="h-32 bg-primary-600 rounded-2xl"></div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="h-24 bg-slate-700 rounded-xl"></div>
-                                        <div className="h-24 bg-slate-700 rounded-xl"></div>
-                                    </div>
-                                </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+                        className="flex-1 relative"
+                    >
+                        {/* Decorative background glow */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-primary-500/20 rounded-full blur-[80px] z-0" />
+
+                        {/* Mock Phone Realistic */}
+                        <div className="relative w-72 h-[580px] bg-slate-900 rounded-[3rem] border-[12px] border-slate-800 mx-auto shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden z-10">
+                            {/* Notch */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-2xl z-20 flex items-center justify-center">
+                                <div className="w-12 h-1 bg-slate-900 rounded-full mb-1"></div>
+                            </div>
+
+                            {/* Screen Content - IA Generated Image */}
+                            <div className="w-full h-full relative">
+                                <Image
+                                    src="/img/app-preview.png"
+                                    alt="App Screenshot"
+                                    fill
+                                    className="object-cover"
+                                />
                             </div>
                         </div>
-                    </div>
+
+                        {/* Floating elements - Adjusted Positions */}
+                        <motion.div
+                            animate={{ y: [0, -15, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-10 -right-4 lg:-right-10 p-5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20 hidden sm:block"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                                    <CheckCircle2 className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-white/60 font-medium">{t('app.ticketValidated')}</p>
+                                    <p className="text-sm font-bold text-white">Paris → Dakar</p>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            animate={{ y: [0, 15, 0] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute bottom-20 -left-4 lg:-left-10 p-5 bg-slate-800/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-20 hidden sm:block"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
+                                    <Star className="w-6 h-6 text-white shrink-0" />
+                                </div>
+                                <p className="text-sm font-bold text-white leading-tight whitespace-pre-line">{t('app.realTime')}</p>
+                            </div>
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
         </div>

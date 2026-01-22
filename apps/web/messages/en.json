@@ -20,6 +20,7 @@
         "hotels": "Hotels",
         "buses": "Buses",
         "cars": "Cars",
+        "groups": "Groups",
         "login": "Login",
         "signup": "Sign up",
         "myBookings": "My bookings",
@@ -27,11 +28,53 @@
         "logout": "Logout"
     },
     "home": {
-        "title": "Travel without limits",
-        "subtitle": "Book flights, hotels, buses and cars in just a few clicks",
+        "title": "Your whole trip,\nin one single app.",
+        "subtitle": "Flights, Hotels, Cars and Urban Transports.\nPlan, book and travel without limits.",
         "searchPlaceholder": "Where do you want to go?",
         "popularDestinations": "Popular destinations",
-        "bestDeals": "Best deals"
+        "popularSubtitle": "The most searched destinations",
+        "seeAll": "See all",
+        "services": {
+            "flights": {
+                "title": "Flights",
+                "desc": "Best rates guaranteed"
+            },
+            "hotels": {
+                "title": "Hotels",
+                "desc": "Everywhere in the world"
+            },
+            "cars": {
+                "title": "Cars",
+                "desc": "Rental & Transfers"
+            },
+            "transit": {
+                "title": "Transports",
+                "desc": "Bus, Metro & Itineraries"
+            }
+        },
+        "features": {
+            "payment": {
+                "title": "Secure payment",
+                "desc": "100% secure transactions"
+            },
+            "prices": {
+                "title": "Best prices",
+                "desc": "Lowest price guarantee"
+            },
+            "support": {
+                "title": "24/7 Support",
+                "desc": "Assistance at any time"
+            }
+        },
+        "app": {
+            "badge": "Mobile App Available",
+            "title": "Everywhere with you.",
+            "desc": "Find your flight tickets, hotel reservations and metro tickets directly on your mobile. A smooth experience, even offline.",
+            "downloadOn": "Download on",
+            "availableOn": "Available on",
+            "ticketValidated": "Ticket validated",
+            "realTime": "Real-time\nupdates"
+        }
     },
     "flights": {
         "title": "Search for a flight",
@@ -66,7 +109,12 @@
         "sortBy": "Sort by",
         "cheapest": "Cheapest",
         "fastest": "Fastest",
-        "bestValue": "Best value"
+        "bestValue": "Best value",
+        "luggage": "Luggage",
+        "checkedBag": "Checked bag",
+        "checkedBags": "Checked bags",
+        "handBag": "Hand bag",
+        "handBags": "Hand bags"
     },
     "hotels": {
         "title": "Search for a hotel",
@@ -136,11 +184,26 @@
         "signupSuccess": "Signup successful"
     },
     "footer": {
+        "tagline": "Travel together, simply.",
+        "description": "Your travel partner for Africa and Europe. Book flights, hotels, buses and cars in just a few clicks.",
+        "services": "Services",
+        "company": "Company",
+        "support": "Support",
         "about": "About",
         "contact": "Contact",
+        "partners": "Partners",
+        "careers": "Careers",
         "help": "Help",
+        "faq": "FAQ",
         "terms": "Terms of service",
         "privacy": "Privacy policy",
+        "carRentals": "Car rentals",
+        "groupTrips": "Group Trips",
+        "services_list": {
+            "flights": "Flights",
+            "hotels": "Hotels",
+            "buses": "Buses"
+        },
         "copyright": "© 2024 ÇA VOYAGE. All rights reserved."
     }
 }

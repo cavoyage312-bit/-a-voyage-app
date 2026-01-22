@@ -20,6 +20,7 @@
         "hotels": "Hotéis",
         "buses": "Ônibus",
         "cars": "Carros",
+        "groups": "Grupos",
         "login": "Entrar",
         "signup": "Cadastrar",
         "myBookings": "Minhas reservas",
@@ -27,11 +28,53 @@
         "logout": "Sair"
     },
     "home": {
-        "title": "Viaje sem limites",
-        "subtitle": "Reserve voos, hotéis, ônibus e carros em poucos cliques",
-        "searchPlaceholder": "Para onde você quer ir?",
+        "title": "Toda a sua viagem,\nnuma única app.",
+        "subtitle": "Voos, Hotéis, Carros e Transportes Urbanos.\nPlaneie, reserve e viaje sem limites.",
+        "searchPlaceholder": "Para onde quer ir?",
         "popularDestinations": "Destinos populares",
-        "bestDeals": "Melhores ofertas"
+        "popularSubtitle": "Os destinos mais procurados",
+        "seeAll": "Ver tudo",
+        "services": {
+            "flights": {
+                "title": "Voos",
+                "desc": "Melhores tarifas garantidas"
+            },
+            "hotels": {
+                "title": "Hotéis",
+                "desc": "Em todo o mundo"
+            },
+            "cars": {
+                "title": "Carros",
+                "desc": "Aluguer e transfers"
+            },
+            "transit": {
+                "title": "Transportes",
+                "desc": "Autocarro, Metro e Itinerários"
+            }
+        },
+        "features": {
+            "payment": {
+                "title": "Pagamento seguro",
+                "desc": "Transações 100% seguras"
+            },
+            "prices": {
+                "title": "Melhores preços",
+                "desc": "Garantia de preço mais baixo"
+            },
+            "support": {
+                "title": "Suporte 24/7",
+                "desc": "Assistência a qualquer momento"
+            }
+        },
+        "app": {
+            "badge": "Aplicação Móvel Disponível",
+            "title": "Em todo o lado consigo.",
+            "desc": "Encontre os seus bilhetes de avião, reservas de hotel e bilhetes de metro diretamente no seu telemóvel. Uma experiência fluida, mesmo offline.",
+            "downloadOn": "Descarregar na",
+            "availableOn": "Disponível no",
+            "ticketValidated": "Bilhete validado",
+            "realTime": "Atualização\nem tempo real"
+        }
     },
     "flights": {
         "title": "Pesquisar voo",
@@ -66,7 +109,12 @@
         "sortBy": "Ordenar por",
         "cheapest": "Mais barato",
         "fastest": "Mais rápido",
-        "bestValue": "Melhor custo-benefício"
+        "bestValue": "Melhor custo-benefício",
+        "luggage": "Bagagem",
+        "checkedBag": "Bagagem de porão",
+        "checkedBags": "Bagagem de porão",
+        "handBag": "Bagagem de mão",
+        "handBags": "Bagagem de mão"
     },
     "hotels": {
         "title": "Pesquisar hotel",
@@ -141,6 +189,21 @@
         "help": "Ajuda",
         "terms": "Termos de uso",
         "privacy": "Política de privacidade",
+        "tagline": "Viajar juntos, de forma simples.",
+        "description": "O seu parceiro de viagem para África e Europa. Reserve voos, hotéis, autocarros e carros em poucos cliques.",
+        "services": "Serviços",
+        "company": "Empresa",
+        "support": "Suporte",
+        "partners": "Parceiros",
+        "careers": "Carreiras",
+        "faq": "FAQ",
+        "carRentals": "Aluguer de carros",
+        "groupTrips": "Viagens em grupo",
+        "services_list": {
+            "flights": "Voos",
+            "hotels": "Hotéis",
+            "buses": "Autocarros"
+        },
         "copyright": "© 2024 ÇA VOYAGE. Todos os direitos reservados."
     }
 }

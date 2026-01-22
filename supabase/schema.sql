@@ -171,3 +171,28 @@ on conflict (id) do nothing;
 alter table app_settings enable row level security;
 create policy "Enable read access for all users" on app_settings for select using (true);
 create policy "Enable update for auth users only" on app_settings for update using (true);
+-- ==========================================
+-- 6. TABLE GROUP_QUOTES (Demandes Groupes/Business)
+-- ==========================================
+create table if not exists public.group_quotes (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  
+  travel_type text not null, -- flight, road, combined
+  origin text,
+  destination text,
+  travel_date date,
+  passengers integer,
+  
+  company_name text,
+  contact_name text not null,
+  email text not null,
+  phone text,
+  message text,
+  
+  status text default 'pending' check (status in ('pending', 'contacted', 'resolved'))
+);
+
+alter table public.group_quotes enable row level security;
+create policy "Anyone can submit group quotes" on group_quotes for insert with check (true);
+create policy "Only admins view group quotes" on group_quotes for select using (true);

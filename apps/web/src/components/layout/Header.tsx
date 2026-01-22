@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, Globe, ChevronDown, User, Check, Briefcase, Sparkles, Settings, Plane, Hotel, Bus, Car } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User, Users, Check, Briefcase, Sparkles, Settings, Plane, Hotel, Bus, Car } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,6 +23,7 @@ export function Header() {
         { href: `/${locale}/hotels`, label: t('hotels'), icon: <Hotel className="w-5 h-5" /> },
         { href: `/${locale}/buses`, label: t('buses'), icon: <Bus className="w-5 h-5" /> },
         { href: `/${locale}/cars`, label: t('cars'), icon: <Car className="w-5 h-5" /> },
+        { href: `/${locale}/groups`, label: t('groups'), icon: <Users className="w-5 h-5" /> },
     ];
 
     useEffect(() => {
@@ -43,7 +44,7 @@ export function Header() {
     const isActive = (href: string) => pathname.startsWith(href);
 
     return (
-        <header className="sticky top-0 z-50 bg-primary-800/80 backdrop-blur-2xl border-b border-white/10 shadow-2xl transition-all duration-300">
+        <header className="sticky top-0 z-50 w-full bg-primary-800/80 backdrop-blur-2xl border-b border-white/10 shadow-2xl transition-all duration-300">
             <div className="container-custom">
                 <nav className="flex items-center justify-between h-20 lg:h-24 gap-4">
                     {/* Logo Section */}

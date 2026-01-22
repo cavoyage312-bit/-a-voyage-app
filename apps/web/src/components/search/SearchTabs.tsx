@@ -61,11 +61,13 @@ export function SearchTabs() {
                 {activeTab === 'cars' && (
                     <div className="text-center py-8">
                         <Car className="w-16 h-16 mx-auto mb-4 text-primary-200" />
-                        <p className="text-slate-600 mb-4">
-                            Louez une voiture ou organisez un voyage en groupe
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Voyages en Groupe & Business</h3>
+                        <p className="text-slate-600 mb-4 px-4">
+                            Organisez vos déplacements professionnels, séminaires ou événements familiaux.
+                            De 10 à 300+ personnes, nous gérons tout.
                         </p>
-                        <Link href={`/${locale}/cars`} className="btn btn-primary">
-                            Voir les véhicules
+                        <Link href={`/${locale}/groups`} className="btn btn-primary px-8">
+                            Découvrir nos solutions groupes
                         </Link>
                     </div>
                 )}

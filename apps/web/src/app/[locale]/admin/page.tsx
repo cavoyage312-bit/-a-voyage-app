@@ -31,6 +31,7 @@ import { BookingsList } from '@/components/admin/BookingsList';
 import { UsersList } from '@/components/admin/UsersList';
 import { PartnersList } from '@/components/admin/PartnersList';
 import { PaymentsList } from '@/components/admin/PaymentsList';
+import { GroupQuotesList } from '@/components/admin/GroupQuotesList';
 
 export default function AdminDashboard() {
     const params = useParams();
@@ -115,6 +116,7 @@ export default function AdminDashboard() {
         { id: 'cars', label: 'Voitures', icon: Car },
         { id: 'users', label: 'Utilisateurs', icon: Users },
         { id: 'partners', label: 'Partenaires', icon: Briefcase },
+        { id: 'groups', label: 'Devis Groupes', icon: Briefcase },
         { id: 'payments', label: 'Paiements', icon: CreditCard },
         { id: 'analytics', label: 'Analytique', icon: BarChart3 },
         { id: 'settings', label: 'Paramètres', icon: Settings },
@@ -243,6 +245,7 @@ export default function AdminDashboard() {
                         {/* Management Lists */}
                         {activeTab === 'users' && <UsersList />}
                         {activeTab === 'partners' && <PartnersList />}
+                        {activeTab === 'groups' && <GroupQuotesList />}
                         {activeTab === 'payments' && <PaymentsList />}
 
                         {activeTab === 'analytics' && (
