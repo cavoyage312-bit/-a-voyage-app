@@ -1,14 +1,13 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useSearchParams, useParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { QrCode, CreditCard, ArrowLeft, Bus } from 'lucide-react';
+import { QrCode, CreditCard, ArrowLeft, Bus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
-export default function TicketPage() {
+function TicketContent() {
     const searchParams = useSearchParams();
     const params = useParams();
     const locale = params.locale as string;
@@ -115,7 +114,6 @@ export default function TicketPage() {
                         </Link>
                     </div>
 
-                    {/* Effet "déchiré" ticket en bas (optionnel, simple CSS border trick) */}
                     <div className="absolute bottom-0 w-full h-4 bg-slate-900" style={{ clipPath: 'polygon(0 100%, 5% 0, 10% 100%, 15% 0, 20% 100%, 25% 0, 30% 100%, 35% 0, 40% 100%, 45% 0, 50% 100%, 55% 0, 60% 100%, 65% 0, 70% 100%, 75% 0, 80% 100%, 85% 0, 90% 100%, 95% 0, 100% 100%)' }}></div>
                 </motion.div>
             </div>
@@ -177,5 +175,18 @@ export default function TicketPage() {
                 </p>
             </div>
         </div>
+    );
+}
+
+export default function TicketPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-12 h-12 text-primary-500 animate-spin mb-4" />
+                <p className="text-slate-500">Chargement du ticket...</p>
+            </div>
+        }>
+            <TicketContent />
+        </Suspense>
     );
 }

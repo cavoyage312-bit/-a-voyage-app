@@ -205,5 +205,13 @@
             "buses": "Buses"
         },
         "copyright": "© 2024 ÇA VOYAGE. All rights reserved."
+    },
+    "cars": {
+        "title": "Car Rental",
+        "search": "Search for a car",
+        "results": "vehicles found",
+        "noResults": "No vehicles available",
+        "filters": "Filters",
+        "details": "Details"
     }
 }

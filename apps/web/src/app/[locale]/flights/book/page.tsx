@@ -2,14 +2,14 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Plane, Calendar, Clock, CreditCard, Check, User, Mail, ShieldCheck } from 'lucide-react';
+import { Plane, Calendar, Clock, CreditCard, Check, User, Mail, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
-export default function FlightBookingPage() {
+function FlightBookingContent() {
     const t = useTranslations('flights');
     const searchParams = useSearchParams();
     const params = useParams();
@@ -314,5 +314,18 @@ function ConfirmationView({ locale, refCode }: { locale: string, refCode: string
                 </div>
             </motion.div>
         </div>
+    );
+}
+
+export default function FlightBookingPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-12 h-12 text-primary-500 animate-spin mb-4" />
+                <p className="text-slate-500">Chargement de la réservation...</p>
+            </div>
+        }>
+            <FlightBookingContent />
+        </Suspense>
     );
 }

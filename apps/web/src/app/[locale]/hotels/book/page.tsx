@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSearchParams, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import {
@@ -88,8 +88,8 @@ export default function HotelBookingPage() {
                             <div key={s.num} className="flex items-center">
                                 <div
                                     className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${step >= s.num
-                                            ? 'bg-primary-700 text-white'
-                                            : 'bg-slate-200 text-slate-500'
+                                        ? 'bg-primary-700 text-white'
+                                        : 'bg-slate-200 text-slate-500'
                                         }`}
                                 >
                                     {step > s.num ? <Check className="w-4 h-4" /> : s.num}

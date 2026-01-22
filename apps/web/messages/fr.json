@@ -205,5 +205,13 @@
             "buses": "Bus"
         },
         "copyright": "© 2024 ÇA VOYAGE. Tous droits réservés."
+    },
+    "cars": {
+        "title": "Location de voitures",
+        "search": "Rechercher une voiture",
+        "results": "véhicules trouvés",
+        "noResults": "Aucun véhicule disponible",
+        "filters": "Filtres",
+        "details": "Détails"
     }
 }

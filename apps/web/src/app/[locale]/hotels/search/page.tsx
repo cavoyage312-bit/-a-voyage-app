@@ -2,14 +2,14 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Star, Wifi, Coffee, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
-export default function HotelSearchPage() {
+function HotelSearchContent() {
     const t = useTranslations('hotels');
     const searchParams = useSearchParams();
     const params = useParams();
@@ -25,7 +25,6 @@ export default function HotelSearchPage() {
         async function fetchHotels() {
             setLoading(true);
             try {
-                // Nettoyer le code ville (ex: "Paris (PAR)" -> "PAR")
                 const cityCode = destination.match(/\(([A-Z]{3})\)/)?.[1] || destination;
 
                 if (!cityCode) {
@@ -47,7 +46,7 @@ export default function HotelSearchPage() {
         }
 
         fetchHotels();
-    }, [searchParams]);
+    }, [searchParams, destination]);
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -126,5 +125,18 @@ export default function HotelSearchPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function HotelSearchPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-12 h-12 text-primary-500 animate-spin mb-4" />
+                <p className="text-slate-500">Chargement des hôtels...</p>
+            </div>
+        }>
+            <HotelSearchContent />
+        </Suspense>
     );
 }

@@ -2,14 +2,14 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Car, Fuel, Users, Gauge, Briefcase, Loader2, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
-export default function CarSearchPage() {
+function CarSearchContent() {
     const t = useTranslations('cars');
     const searchParams = useSearchParams();
     const params = useParams();
@@ -50,7 +50,7 @@ export default function CarSearchPage() {
         }
 
         fetchCars();
-    }, [searchParams]);
+    }, [searchParams, location]);
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -154,5 +154,18 @@ export default function CarSearchPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function CarSearchPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-12 h-12 text-primary-500 animate-spin mb-4" />
+                <p className="text-slate-500">Chargement de la recherche...</p>
+            </div>
+        }>
+            <CarSearchContent />
+        </Suspense>
     );
 }
