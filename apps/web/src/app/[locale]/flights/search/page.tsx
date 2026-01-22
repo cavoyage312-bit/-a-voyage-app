@@ -95,7 +95,8 @@ export default function FlightSearchPage() {
             const res = await fetch(`/api/flights/search?${query.toString()}`);
 
             if (!res.ok) {
-                throw new Error('Erreur lors de la recherche');
+                const errJson = await res.json().catch(() => ({}));
+                throw new Error(errJson.error || 'Erreur lors de la recherche');
             }
 
             const json = await res.json();

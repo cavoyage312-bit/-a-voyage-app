@@ -17,6 +17,7 @@ import {
     Car,
     Train
 } from 'lucide-react';
+import { PartnerBanner } from '@/components/layout/PartnerBanner';
 
 export default function HomePage() {
     const t = useTranslations('home');
@@ -147,7 +148,7 @@ export default function HomePage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 + (index * 0.1) }}
                             >
-                                <Link href={service.href} className="group relative block h-40 sm:h-48 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-1">
+                                <Link href={service.href} prefetch={false} className="group relative block h-40 sm:h-48 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-1">
                                     <Image
                                         src={service.image}
                                         alt={service.title}
@@ -208,7 +209,7 @@ export default function HomePage() {
                                 transition={{ delay: index * 0.1 }}
                                 className="group"
                             >
-                                <Link href={`/${locale}/flights/search?to=${dest.city}`}>
+                                <Link href={`/${locale}/flights/search?to=${dest.city}`} prefetch={false}>
                                     <div className="card card-hover overflow-hidden h-full">
                                         <div className="relative aspect-[4/3] sm:aspect-[4/3]">
                                             <Image
@@ -268,6 +269,9 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {/* Partner Banner - Nouveau CTA */}
+            <PartnerBanner locale={locale} />
 
             {/* CTA App Mobile (Optionnel) */}
             <section className="py-20 bg-slate-900 text-white overflow-hidden relative">

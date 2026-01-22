@@ -14,6 +14,8 @@ import {
     ArrowRight,
     Filter,
     Star,
+    Briefcase,
+    Loader2,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -80,12 +82,32 @@ export default function BusesPage() {
         to: '',
         date: '',
         passengers: 1,
+        luggage: 1,
     });
+    const [busRoutes, setBusRoutes] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
 
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         setShowResults(true);
+
+        try {
+            const res = await fetch(`/api/buses/search?from=${formData.from}&to=${formData.to}`);
+            const json = await res.json();
+            if (json.data) {
+                setBusRoutes(json.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch buses:', error);
+        } finally {
+            setLoading(false);
+            setTimeout(() => {
+                const resultsSection = document.getElementById('results-section');
+                resultsSection?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
     };
 
     return (
@@ -202,6 +224,30 @@ export default function BusesPage() {
                                         </select>
                                     </div>
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                                        Bagages
+                                    </label>
+                                    <div className="input-group">
+                                        <Briefcase className="input-icon w-5 h-5" />
+                                        <select
+                                            className="input input-with-icon"
+                                            value={formData.luggage}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    luggage: parseInt(e.target.value),
+                                                })
+                                            }
+                                        >
+                                            {[0, 1, 2, 3].map((n) => (
+                                                <option key={n} value={n}>
+                                                    {n === 0 ? 'Aucun bagage' : `${n} bagage${n > 1 ? 's' : ''}`}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" className="btn btn-primary btn-lg w-full md:w-auto">
                                 <Search className="w-5 h-5" />
@@ -213,13 +259,13 @@ export default function BusesPage() {
             </section>
 
             {/* Results or Popular Routes */}
-            <section className="py-12">
+            <section className="py-12" id="results-section">
                 <div className="container-custom">
                     {showResults ? (
                         <>
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-xl font-bold text-slate-900">
-                                    {mockBusRoutes.length} trajets trouvés
+                                    {busRoutes.length} trajets trouvés
                                 </h2>
                                 <button className="btn btn-outline btn-sm">
                                     <Filter className="w-4 h-4" />
@@ -227,85 +273,97 @@ export default function BusesPage() {
                                 </button>
                             </div>
 
-                            <div className="space-y-4">
-                                {mockBusRoutes.map((route, index) => (
-                                    <motion.div
-                                        key={route.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="card card-hover p-6"
-                                    >
-                                        <div className="flex flex-col md:flex-row md:items-center gap-4">
-                                            {/* Company */}
-                                            <div className="flex items-center gap-3 md:w-40">
-                                                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center text-2xl">
-                                                    {route.logo}
-                                                </div>
-                                                <div>
-                                                    <p className="font-semibold text-slate-900">
-                                                        {route.company}
-                                                    </p>
-                                                    <div className="flex items-center gap-1">
-                                                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                                                        <span className="text-xs text-slate-500">
-                                                            {route.rating}
-                                                        </span>
+                            {loading ? (
+                                <div className="flex flex-col items-center justify-center py-20">
+                                    <Loader2 className="w-12 h-12 text-primary-500 animate-spin mb-4" />
+                                    <p className="text-slate-500">Recherche des meilleurs trajets...</p>
+                                </div>
+                            ) : busRoutes.length === 0 ? (
+                                <div className="text-center py-20">
+                                    <h3 className="text-xl font-bold text-slate-900">Aucun trajet trouvé</h3>
+                                    <p className="text-slate-500">Essayez d'autres villes ou une autre date.</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {busRoutes.map((route, index) => (
+                                        <motion.div
+                                            key={route.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            className="card card-hover p-6"
+                                        >
+                                            <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                                {/* Company */}
+                                                <div className="flex items-center gap-3 md:w-40">
+                                                    <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center text-2xl">
+                                                        {route.logo}
                                                     </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Route Info */}
-                                            <div className="flex-1">
-                                                <div className="flex items-center justify-between md:justify-start md:gap-8">
-                                                    <div className="text-center">
-                                                        <p className="text-xl font-bold text-slate-900">
-                                                            {route.departure}
+                                                    <div>
+                                                        <p className="font-semibold text-slate-900">
+                                                            {route.company}
                                                         </p>
-                                                        <p className="text-sm text-slate-500">{route.from}</p>
-                                                    </div>
-                                                    <div className="flex-1 px-4 max-w-xs">
-                                                        <div className="text-center text-sm text-slate-500 mb-1">
-                                                            {route.duration}
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 bg-primary-600 rounded-full" />
-                                                            <div className="flex-1 h-0.5 bg-slate-200" />
-                                                            <Bus className="w-4 h-4 text-primary-600" />
-                                                            <div className="flex-1 h-0.5 bg-slate-200" />
-                                                            <div className="w-2 h-2 bg-primary-600 rounded-full" />
+                                                        <div className="flex items-center gap-1">
+                                                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                                            <span className="text-xs text-slate-500">
+                                                                {route.rating}
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <div className="text-center">
-                                                        <p className="text-xl font-bold text-slate-900">
-                                                            {route.arrival}
-                                                        </p>
-                                                        <p className="text-sm text-slate-500">{route.to}</p>
+                                                </div>
+
+                                                {/* Route Info */}
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between md:justify-start md:gap-8">
+                                                        <div className="text-center">
+                                                            <p className="text-xl font-bold text-slate-900">
+                                                                {route.departure}
+                                                            </p>
+                                                            <p className="text-sm text-slate-500">{route.from}</p>
+                                                        </div>
+                                                        <div className="flex-1 px-4 max-w-xs">
+                                                            <div className="text-center text-sm text-slate-500 mb-1">
+                                                                {route.duration}
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-2 h-2 bg-primary-600 rounded-full" />
+                                                                <div className="flex-1 h-0.5 bg-slate-200" />
+                                                                <Bus className="w-4 h-4 text-primary-600" />
+                                                                <div className="flex-1 h-0.5 bg-slate-200" />
+                                                                <div className="w-2 h-2 bg-primary-600 rounded-full" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-xl font-bold text-slate-900">
+                                                                {route.arrival}
+                                                            </p>
+                                                            <p className="text-sm text-slate-500">{route.to}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            {/* Price & CTA */}
-                                            <div className="flex items-center justify-between md:flex-col md:items-end gap-4 pt-4 md:pt-0 border-t md:border-t-0 md:border-l md:pl-6 border-slate-100">
-                                                <div className="text-right">
-                                                    <p className="price-badge text-xl">
-                                                        {route.price.toLocaleString()} {route.currency}
-                                                    </p>
-                                                    <p className="text-xs text-slate-500 mt-1">
-                                                        {route.seats} places dispo
-                                                    </p>
+                                                {/* Price & CTA */}
+                                                <div className="flex items-center justify-between md:flex-col md:items-end gap-4 pt-4 md:pt-0 border-t md:border-t-0 md:border-l md:pl-6 border-slate-100">
+                                                    <div className="text-right">
+                                                        <p className="price-badge text-xl">
+                                                            {route.price.toLocaleString()} {route.currency}
+                                                        </p>
+                                                        <p className="text-xs text-slate-500 mt-1">
+                                                            {route.seats} places dispo
+                                                        </p>
+                                                    </div>
+                                                    <Link
+                                                        href={`/${locale}/buses/book?id=${route.id}`}
+                                                        className="btn btn-primary btn-sm"
+                                                    >
+                                                        Réserver
+                                                    </Link>
                                                 </div>
-                                                <Link
-                                                    href={`/${locale}/buses/book?id=${route.id}`}
-                                                    className="btn btn-primary btn-sm"
-                                                >
-                                                    Réserver
-                                                </Link>
                                             </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
                         </>
                     ) : (
                         <>

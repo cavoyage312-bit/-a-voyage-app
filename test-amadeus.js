@@ -1,57 +1,67 @@
-const fs = require('fs');
-const path = require('path');
 
-// Lecture manuelle du .env.local
-const envPath = path.resolve('apps/web/.env.local');
-const envContent = fs.readFileSync(envPath, 'utf8');
+const clientId = 'DMJkbydA3CADWsqpAHpAiQHjepWUA2II';
+const clientSecret = 'nR18APX045ZbEptw';
 
-const getEnv = (key) => {
-    const match = envContent.match(new RegExp(`${key}=(.*)`));
-    return match ? match[1].trim() : null;
-};
-
-const client_id = getEnv('AMADEUS_CLIENT_ID');
-const client_secret = getEnv('AMADEUS_CLIENT_SECRET');
-
-async function test() {
+async function testAmadeus() {
+    let output = '--- TEST RESULTS ---\n';
     try {
-        const response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+        const tokenRes = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`
+            body: new URLSearchParams({
+                grant_type: 'client_credentials',
+                client_id: clientId,
+                client_secret: clientSecret
+            })
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log('✅ Connexion REUSSIE !');
-
-            const origin = 'PAR';
-            const dest = 'CMN';
-            const date = '2026-03-10';
-
-            console.log(`Action: Recherche ${origin} -> ${dest} au ${date}`);
-
-            const searchRes = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${dest}&departureDate=${date}&adults=1&max=5`, {
-                headers: { 'Authorization': `Bearer ${data.access_token}` }
-            });
-
-            const searchData = await searchRes.json();
-            if (searchRes.ok) {
-                console.log('✅ RECHERCHE OK !');
-                console.log('Vols trouvés:', searchData.meta?.count || 0);
-                if (searchData.data) {
-                    console.log('Exemple de vol:', searchData.data[0]?.id);
-                }
-            } else {
-                console.log('❌ ERREUR RECHERCHE:', JSON.stringify(searchData, null, 2));
-            }
-        } else {
-            console.log('❌ ÉCHEC CONNEXION:', JSON.stringify(data, null, 2));
+        if (!tokenRes.ok) {
+            output += `Token Error: ${tokenRes.status} ${await tokenRes.text()}\n`;
+            console.log(output);
+            return;
         }
-    } catch (error) {
-        console.error('💥 Erreur:', error.message);
+
+        const tokenData = await tokenRes.json();
+        const token = tokenData.access_token;
+        output += 'Token: OK\n';
+
+        const flightRes = await fetch('https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=MAD&destinationLocationCode=PAR&departureDate=2026-03-01&adults=1&max=2', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!flightRes.ok) {
+            output += `Flight Search Error: ${flightRes.status} ${await flightRes.text()}\n`;
+        } else {
+            const flights = await flightRes.json();
+            output += `Flights Found: ${flights.data?.length || 0}\n`;
+        }
+
+        const hotelRes = await fetch('https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=PAR&radius=5', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!hotelRes.ok) {
+            output += `Hotel Search Error: ${hotelRes.status} ${await hotelRes.text()}\n`;
+        } else {
+            const hotels = await hotelRes.json();
+            output += `Hotels Found: ${hotels.data?.length || 0}\n`;
+        }
+
+        const locRes = await fetch('https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT,CITY&keyword=PARIS&page[limit]=2', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!locRes.ok) {
+            output += `Location Search Error: ${locRes.status} ${await locRes.text()}\n`;
+        } else {
+            const locs = await locRes.json();
+            output += `Locations Found: ${locs.data?.length || 0}\n`;
+        }
+
+    } catch (err) {
+        output += `Unexpected error: ${err.message}\n`;
     }
+    console.log(output);
 }
 
-test();
+testAmadeus();

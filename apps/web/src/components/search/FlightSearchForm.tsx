@@ -20,13 +20,12 @@ export function FlightSearchForm() {
     const [returnDate, setReturnDate] = useState('');
     const [passengers, setPassengers] = useState(1);
     const [travelClass, setTravelClass] = useState('economy');
+    const [checkedBags, setCheckedBags] = useState(0);
+    const [handBags, setHandBags] = useState(1);
     const [showPassengers, setShowPassengers] = useState(false);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // Sécurité : si on n'a pas de code IATA (format 3 lettres), la recherche risque d'échouer.
-        // L'autocomplétion renvoie normalement déjà le code car on passe setFrom/setTo.
 
         const searchParams = new URLSearchParams({
             from,
@@ -35,6 +34,8 @@ export function FlightSearchForm() {
             ...(tripType === 'roundTrip' && returnDate && { return: returnDate }),
             passengers: passengers.toString(),
             class: travelClass,
+            checkedBags: checkedBags.toString(),
+            handBags: handBags.toString(),
         });
         router.push(`/${locale}/flights/search?${searchParams.toString()}`);
     };
@@ -167,30 +168,82 @@ export function FlightSearchForm() {
                         {/* Passengers dropdown */}
                         {showPassengers && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 p-4 z-20 animate-slide-down">
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className="font-medium text-sm">{t('adults')}</span>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            type="button"
-                                            className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
-                                            onClick={() => setPassengers(Math.max(1, passengers - 1))}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="w-6 text-center font-semibold">{passengers}</span>
-                                        <button
-                                            type="button"
-                                            className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
-                                            onClick={() => setPassengers(Math.min(9, passengers + 1))}
-                                        >
-                                            +
-                                        </button>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium text-sm">{t('adults')}</span>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                type="button"
+                                                className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                onClick={() => setPassengers(Math.max(1, passengers - 1))}
+                                            >
+                                                -
+                                            </button>
+                                            <span className="w-6 text-center font-semibold">{passengers}</span>
+                                            <button
+                                                type="button"
+                                                className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                onClick={() => setPassengers(Math.min(9, passengers + 1))}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-slate-100 pt-4 space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-sm">{t('handBags')}</p>
+                                                <p className="text-[10px] text-slate-400">Cabine (max 10kg)</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    type="button"
+                                                    className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                    onClick={() => setHandBags(Math.max(0, handBags - 1))}
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="w-6 text-center font-semibold">{handBags}</span>
+                                                <button
+                                                    type="button"
+                                                    className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                    onClick={() => setHandBags(Math.min(passengers, handBags + 1))}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-sm">{t('checkedBags')}</p>
+                                                <p className="text-[10px] text-slate-400">Soute (max 23kg)</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    type="button"
+                                                    className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                    onClick={() => setCheckedBags(Math.max(0, checkedBags - 1))}
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="w-6 text-center font-semibold">{checkedBags}</span>
+                                                <button
+                                                    type="button"
+                                                    className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200"
+                                                    onClick={() => setCheckedBags(Math.min(passengers * 2, checkedBags + 1))}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setShowPassengers(false)}
-                                    className="w-full btn btn-primary btn-sm"
+                                    className="w-full btn btn-primary btn-sm mt-4"
                                 >
                                     Confirmer
                                 </button>

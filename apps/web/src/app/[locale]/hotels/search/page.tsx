@@ -18,7 +18,7 @@ export default function HotelSearchPage() {
     const [hotels, setHotels] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const location = searchParams.get('location') || ''; // Ex: PAR
+    const destination = searchParams.get('destination') || ''; // Ex: PAR
     const checkin = searchParams.get('checkin');
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function HotelSearchPage() {
             setLoading(true);
             try {
                 // Nettoyer le code ville (ex: "Paris (PAR)" -> "PAR")
-                const cityCode = location.match(/\(([A-Z]{3})\)/)?.[1] || location;
+                const cityCode = destination.match(/\(([A-Z]{3})\)/)?.[1] || destination;
 
                 if (!cityCode) {
                     setLoading(false);
@@ -54,7 +54,7 @@ export default function HotelSearchPage() {
             {/* Header */}
             <div className="bg-slate-900 text-white py-8">
                 <div className="container-custom">
-                    <h1 className="text-2xl font-bold mb-2">Hôtels à {location}</h1>
+                    <h1 className="text-2xl font-bold mb-2">Hôtels à {destination}</h1>
                     <p className="text-slate-400">
                         {checkin ? `Pour le ${checkin}` : 'Dates flexibles'} • {hotels.length} établissements trouvés
                     </p>
@@ -102,7 +102,7 @@ export default function HotelSearchPage() {
                                     <h3 className="font-bold text-lg text-slate-900 mb-1 line-clamp-1">{hotel.name}</h3>
                                     <div className="flex items-center gap-1 text-sm text-slate-500 mb-3">
                                         <MapPin className="w-3 h-3" />
-                                        <span className="truncate">{hotel.address?.cityName || location}</span>
+                                        <span className="truncate">{hotel.address?.cityName || destination}</span>
                                     </div>
 
                                     <div className="flex gap-3 mb-4">

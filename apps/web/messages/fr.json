@@ -66,7 +66,12 @@
         "sortBy": "Trier par",
         "cheapest": "Moins cher",
         "fastest": "Plus rapide",
-        "bestValue": "Meilleur rapport"
+        "bestValue": "Meilleur rapport",
+        "luggage": "Bagages",
+        "checkedBag": "Bagage en soute",
+        "checkedBags": "Bagages en soute",
+        "handBag": "Bagage à main",
+        "handBags": "Bagages à main"
     },
     "hotels": {
         "title": "Rechercher un hôtel",

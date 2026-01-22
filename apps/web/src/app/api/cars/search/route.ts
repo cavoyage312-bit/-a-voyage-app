@@ -1,6 +1,16 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { searchCars } from '@/lib/amadeus';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+let settingsCache: any = null;
+let lastSettingsFetch = 0;
+const CACHE_TTL = 5 * 60 * 1000;
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -14,13 +24,22 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        // Tenter de récupérer depuis Amadeus
-        let amadeusData = { data: [] };
-        try {
-            amadeusData = await searchCars(location);
-        } catch (e) {
-            console.warn('Amadeus Car Search failed, falling back to mock');
-        }
+        const getSettings = async () => {
+            const now = Date.now();
+            if (settingsCache && (now - lastSettingsFetch < CACHE_TTL)) return settingsCache;
+            const { data } = await supabase.from('app_settings').select('*').eq('id', 'global').single();
+            if (data) { settingsCache = data; lastSettingsFetch = now; }
+            return data;
+        };
+
+        // Lancer settings en parallèle de la recherche amadeus (ou mock)
+        // Note: On récupère settings au cas où on voudrait appliquer des marges ici aussi
+        const [settings, amadeusDataResult] = await Promise.allSettled([
+            getSettings(),
+            searchCars(location)
+        ]);
+
+        const amadeusData = amadeusDataResult.status === 'fulfilled' ? amadeusDataResult.value : { data: [] };
 
         // Si pas de résultats (ou mode test limité), on génère des offres réalistes basées sur la ville
         const results = (amadeusData.data && amadeusData.data.length > 0)
