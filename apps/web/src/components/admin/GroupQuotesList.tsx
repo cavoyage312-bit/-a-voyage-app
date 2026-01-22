@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client'; // On suppose que ce client existe
+import { createClient } from '@/lib/supabase';
 import {
     Users,
     Calendar,
