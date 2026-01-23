@@ -20,11 +20,14 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { createClient } from '@/lib/supabase';
+
 export default function CarBookingPage() {
     const t = useTranslations('booking');
     const params = useParams();
     const locale = params.locale as string;
 
+    const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -86,8 +89,8 @@ export default function CarBookingPage() {
                             <div key={s.num} className="flex items-center">
                                 <div
                                     className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${step >= s.num
-                                            ? 'bg-primary-700 text-white'
-                                            : 'bg-slate-200 text-slate-500'
+                                        ? 'bg-primary-700 text-white'
+                                        : 'bg-slate-200 text-slate-500'
                                         }`}
                                 >
                                     {step > s.num ? <Check className="w-4 h-4" /> : s.num}
@@ -231,7 +234,56 @@ export default function CarBookingPage() {
                             )}
 
                             {step === 2 && (
-                                <form onSubmit={handleSubmit}>
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    setLoading(true);
+
+                                    try {
+                                        const supabase = createClient();
+                                        const { data: { session } } = await supabase.auth.getSession();
+                                        const token = session?.access_token;
+
+                                        const res = await fetch('/api/bookings', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                ...(token && { 'Authorization': `Bearer ${token}` })
+                                            },
+                                            body: JSON.stringify({
+                                                type: 'car',
+                                                status: 'reserved',
+                                                email: formData.email,
+                                                first_name: formData.firstName,
+                                                last_name: formData.lastName,
+                                                price_amount: car.pricePerDay * car.days,
+                                                price_currency: 'EUR',
+                                                details: {
+                                                    carId: 'MOCK-CAR-01',
+                                                    name: car.name,
+                                                    category: car.category,
+                                                    pickupLocation: car.pickupLocation,
+                                                    pickupDate: car.pickupDate,
+                                                    returnDate: car.returnDate,
+                                                    days: car.days
+                                                }
+                                            })
+                                        });
+
+                                        if (!res.ok) {
+                                            const err = await res.json();
+                                            alert('Erreur: ' + (err.error || 'Erreur inconnue'));
+                                            setLoading(false);
+                                            return;
+                                        }
+
+                                        setStep(3);
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Une erreur est survenue');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}>
                                     <div className="card p-4 sm:p-6 mb-4 sm:mb-6">
                                         <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6 flex items-center gap-2">
                                             <CreditCard className="w-5 h-5 text-primary-700" />
@@ -284,7 +336,8 @@ export default function CarBookingPage() {
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="btn btn-primary btn-lg w-full">
+                                    <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full flex items-center justify-center gap-2">
+                                        {loading ? <span className="animate-spin">⌛</span> : null}
                                         {t('payNow')} - {car.pricePerDay * car.days} €
                                     </button>
                                 </form>

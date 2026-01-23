@@ -41,32 +41,44 @@ function FlightBookingContent() {
         // 1. Simulation processing paiement
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // 2. Sauvegarde Supabase
+        // 2. Sauvegarde via API (Sécurisé)
         try {
             const flightDetails = {
                 flightId: flightId || '#TEST',
                 origin: searchParams.get('origin') || 'PAR',
                 destination: searchParams.get('dest') || 'DKR',
-                date: '2024-04-12', // Idéalement viendrait des props
-                company: 'Air France' // Mock car on n'a pas persisté l'état du vol sélectionné
+                date: '2024-04-12',
+                company: 'Air France'
             };
 
-            const { error } = await supabase.from('bookings').insert({
-                type: 'flight',
-                status: 'confirmed',
-                email: formData.email,
-                first_name: formData.firstName,
-                last_name: formData.lastName,
-                price_amount: 189.00,
-                price_currency: 'EUR',
-                details: flightDetails
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+
+            const res = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` })
+                },
+                body: JSON.stringify({
+                    type: 'flight',
+                    status: 'confirmed',
+                    email: formData.email,
+                    first_name: formData.firstName,
+                    last_name: formData.lastName,
+                    price_amount: 189.00,
+                    price_currency: 'EUR',
+                    details: flightDetails
+                })
             });
 
-            if (error) {
-                console.error('Supabase error:', error);
-                // On continue quand meme pour la démo, mais on log l'erreur
+            if (!res.ok) {
+                const errData = await res.json();
+                console.error('API Error:', errData);
+                alert('Erreur lors de la réservation: ' + (errData.error || 'Erreur inconnue'));
+                setLoading(false);
+                return;
             }
-
         } catch (err) {
             console.error('Save failed:', err);
         }

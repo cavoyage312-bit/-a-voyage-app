@@ -20,6 +20,7 @@
         "hotels": "Hotéis",
         "buses": "Ônibus",
         "cars": "Carros",
+        "apartments": "Apartamentos",
         "groups": "Grupos",
         "login": "Entrar",
         "signup": "Cadastrar",
@@ -49,7 +50,7 @@
             },
             "transit": {
                 "title": "Transportes",
-                "desc": "Autocarro, Metro e Itinerários"
+                "desc": "Autocarro, Metro e Itinerarios"
             }
         },
         "features": {
@@ -157,7 +158,7 @@
         "email": "E-mail",
         "phone": "Telefone",
         "birthDate": "Data de nascimento",
-        "nationality": "Nacionalidad",
+        "nationality": "Nacionalidade",
         "passportNumber": "Número do passaporte",
         "passportExpiry": "Validade do passaporte",
         "payment": "Pagamento",
@@ -191,7 +192,7 @@
         "privacy": "Política de privacidade",
         "tagline": "Viajar juntos, de forma simples.",
         "description": "O seu parceiro de viagem para África e Europa. Reserve voos, hotéis, autocarros e carros em poucos cliques.",
-        "services": "Serviços",
+        "services": "Servicios",
         "company": "Empresa",
         "support": "Suporte",
         "partners": "Parceiros",
@@ -213,5 +214,14 @@
         "noResults": "Nenhum veículo disponível",
         "filters": "Filtros",
         "details": "Detalhes"
+    },
+    "apartments": {
+        "title": "Aluguer de Apartamentos",
+        "search": "Pesquisar alojamento",
+        "results": "alojamentos encontrados",
+        "noResults": "Nenhum alojamento disponível",
+        "filters": "Filtros",
+        "details": "Detalhes",
+        "description": "Encontre apartamentos e casas únicas para a sua estadia."
     }
 }

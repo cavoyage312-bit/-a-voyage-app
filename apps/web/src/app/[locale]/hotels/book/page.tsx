@@ -22,11 +22,14 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { createClient } from '@/lib/supabase';
+
 export default function HotelBookingPage() {
     const t = useTranslations('booking');
     const params = useParams();
     const locale = params.locale as string;
 
+    const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -208,7 +211,55 @@ export default function HotelBookingPage() {
                             )}
 
                             {step === 2 && (
-                                <form onSubmit={handleSubmit}>
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    setLoading(true);
+
+                                    try {
+                                        const supabase = createClient();
+                                        const { data: { session } } = await supabase.auth.getSession();
+                                        const token = session?.access_token;
+
+                                        const res = await fetch('/api/bookings', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                ...(token && { 'Authorization': `Bearer ${token}` })
+                                            },
+                                            body: JSON.stringify({
+                                                type: 'hotel',
+                                                status: 'confirmed',
+                                                email: formData.email,
+                                                first_name: formData.firstName,
+                                                last_name: formData.lastName,
+                                                price_amount: hotel.price * hotel.nights,
+                                                price_currency: 'EUR',
+                                                details: {
+                                                    hotelId: 'MOCK-HTL-01',
+                                                    name: hotel.name,
+                                                    location: hotel.location,
+                                                    checkIn: hotel.checkIn,
+                                                    checkOut: hotel.checkOut,
+                                                    roomType: hotel.roomType
+                                                }
+                                            })
+                                        });
+
+                                        if (!res.ok) {
+                                            const err = await res.json();
+                                            alert('Erreur: ' + (err.error || 'Erreur inconnue'));
+                                            setLoading(false);
+                                            return;
+                                        }
+
+                                        setStep(3);
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert('Une erreur est survenue');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}>
                                     <div className="card p-4 sm:p-6 mb-4 sm:mb-6">
                                         <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6 flex items-center gap-2">
                                             <CreditCard className="w-5 h-5 text-primary-700" />
@@ -261,7 +312,8 @@ export default function HotelBookingPage() {
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="btn btn-primary btn-lg w-full">
+                                    <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full flex items-center justify-center gap-2">
+                                        {loading ? <span className="animate-spin">⌛</span> : null}
                                         {t('payNow')} - {hotel.price * hotel.nights} €
                                     </button>
                                 </form>

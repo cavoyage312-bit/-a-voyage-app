@@ -20,6 +20,7 @@
         "hotels": "Hôtels",
         "buses": "Bus",
         "cars": "Voitures",
+        "apartments": "Appartements",
         "groups": "Groupes",
         "login": "Connexion",
         "signup": "S'inscrire",
@@ -213,5 +214,14 @@
         "noResults": "Aucun véhicule disponible",
         "filters": "Filtres",
         "details": "Détails"
+    },
+    "apartments": {
+        "title": "Location d'Appartements",
+        "search": "Rechercher un logement",
+        "results": "logements trouvés",
+        "noResults": "Aucun logement disponible",
+        "filters": "Filtres",
+        "details": "Détails",
+        "description": "Trouvez des appartements et maisons uniques pour votre séjour."
     }
 }

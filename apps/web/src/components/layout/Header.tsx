@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, Globe, ChevronDown, User, Users, Check, Briefcase, Sparkles, Settings, Plane, Hotel, Bus, Car } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User, Users, Check, Briefcase, Sparkles, Settings, Plane, Hotel, Bus, Car, Building2 } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,6 +23,7 @@ export function Header() {
         { href: `/${locale}/hotels`, label: t('hotels'), icon: <Hotel className="w-5 h-5" /> },
         { href: `/${locale}/buses`, label: t('buses'), icon: <Bus className="w-5 h-5" /> },
         { href: `/${locale}/cars`, label: t('cars'), icon: <Car className="w-5 h-5" /> },
+        { href: `/${locale}/apartments`, label: t('apartments'), icon: <Building2 className="w-5 h-5" /> },
         { href: `/${locale}/groups`, label: t('groups'), icon: <Users className="w-5 h-5" /> },
     ];
 

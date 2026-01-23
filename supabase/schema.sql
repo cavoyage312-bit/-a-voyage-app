@@ -171,6 +171,7 @@ on conflict (id) do nothing;
 alter table app_settings enable row level security;
 create policy "Enable read access for all users" on app_settings for select using (true);
 create policy "Enable update for auth users only" on app_settings for update using (true);
+
 -- ==========================================
 -- 6. TABLE GROUP_QUOTES (Demandes Groupes/Business)
 -- ==========================================
@@ -196,3 +197,50 @@ create table if not exists public.group_quotes (
 alter table public.group_quotes enable row level security;
 create policy "Anyone can submit group quotes" on group_quotes for insert with check (true);
 create policy "Only admins view group quotes" on group_quotes for select using (true);
+
+-- ==========================================
+-- 7. TABLE APARTMENTS (Module Location Appartements)
+-- ==========================================
+create table if not exists public.apartments (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  
+  -- Le partenaire propriétaire
+  partner_id uuid references public.partners,
+  
+  title text not null,
+  description text,
+  city text not null,
+  address text,
+  
+  -- Capacité et Prix
+  max_guests integer default 2,
+  price_per_night numeric not null,
+  currency text default 'EUR',
+  
+  -- Images (Tableau d'URLs)
+  images text[],
+  
+  -- Équipements (JSON: { wifi: true, kitchen: true, ... })
+  amenities jsonb default '{}'::jsonb,
+  
+  -- Statut
+  is_published boolean default true
+);
+
+-- Sécurité Apartments
+alter table public.apartments enable row level security;
+
+-- Tout le monde peut voir les appartements publiés
+create policy "Public view published apartments"
+  on apartments for select
+  using ( is_published = true );
+
+-- Les partenaires peuvent gérer leurs propres appartements (via partners table logic)
+-- Pour simplifier ici (demo), on permet l'insert par tout le monde authentifié
+update public.apartments set updated_at = now();
+
+create policy "Anyone authenticated can insert apartments"
+  on apartments for insert
+  with check ( auth.role() = 'authenticated' );

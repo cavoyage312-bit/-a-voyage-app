@@ -19,6 +19,7 @@ import {
     TrendingUp,
     Users,
     CreditCard,
+    Home,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -49,6 +50,13 @@ export default function PartnerRegisterPage() {
             title: 'Hôtel / Hébergement',
             description: 'Hôtels, auberges, résidences, appartements',
             features: ['Gestion des chambres', 'Calendrier disponibilités', 'Avis clients'],
+        },
+        {
+            id: 'apartment',
+            icon: Home, // You'll need to import Home from lucide-react if not already
+            title: 'Propriétaire d\'Appartement',
+            description: 'Louez votre appartement ou maison',
+            features: ['Gestion des annonces', 'Messagerie directe', 'Revenus sécurisés'],
         },
         {
             id: 'bus',
@@ -224,8 +232,8 @@ export default function PartnerRegisterPage() {
                                             type="button"
                                             onClick={() => setPartnerType(type.id)}
                                             className={`card p-6 text-left transition-all ${partnerType === type.id
-                                                    ? 'ring-2 ring-primary-700 bg-primary-50'
-                                                    : 'hover:bg-slate-50'
+                                                ? 'ring-2 ring-primary-700 bg-primary-50'
+                                                : 'hover:bg-slate-50'
                                                 }`}
                                         >
                                             <div className="flex items-start gap-4">
