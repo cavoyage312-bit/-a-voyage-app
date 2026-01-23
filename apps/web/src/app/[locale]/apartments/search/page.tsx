@@ -7,7 +7,9 @@ import { ApartmentSearchForm } from '@/components/search/ApartmentSearchForm';
 import { ApartmentCard } from '@/components/apartments/ApartmentCard';
 import { Loader2 } from 'lucide-react';
 
-export default function ApartmentSearchPage({ params: { locale } }: { params: { locale: string } }) {
+import { Suspense } from 'react';
+
+function ApartmentSearchContent({ locale }: { locale: string }) {
     const t = useTranslations('apartments');
     const commonT = useTranslations('common');
     const searchParams = useSearchParams();
@@ -79,5 +81,17 @@ export default function ApartmentSearchPage({ params: { locale } }: { params: { 
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ApartmentSearchPage({ params: { locale } }: { params: { locale: string } }) {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+            </div>
+        }>
+            <ApartmentSearchContent locale={locale} />
+        </Suspense>
     );
 }
