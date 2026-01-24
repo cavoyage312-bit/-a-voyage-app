@@ -4,12 +4,12 @@ import Image from 'next/image';
 import { MapPin, Star, Users, Home, Check, Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { createSupabaseServerClient } from '@/lib/supabase';
 
 // Mock function to get apartment details (Now using DB fetch)
 async function getApartment(id: string) {
-    const supabase = createServerComponentClient({ cookies });
+    const supabase = createSupabaseServerClient(cookies());
 
     try {
         const { data, error } = await supabase
