@@ -14,11 +14,15 @@ export function formatPrice(amount: number, currency: string = 'EUR'): string {
 }
 
 export function formatDate(date: string | Date, locale: string = 'fr'): string {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+
     return new Intl.DateTimeFormat(locale, {
         weekday: 'short',
         day: 'numeric',
         month: 'short',
-    }).format(new Date(date));
+    }).format(d);
 }
 
 export function formatDuration(minutes: number): string {
@@ -28,7 +32,11 @@ export function formatDuration(minutes: number): string {
 }
 
 export function formatTime(dateString: string): string {
-    return new Date(dateString).toLocaleTimeString('fr-FR', {
+    if (!dateString) return '--:--';
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString; // Return raw string if invalid but exists (like "06:00")
+
+    return d.toLocaleTimeString('fr-FR', {
         hour: '2-digit',
         minute: '2-digit',
     });

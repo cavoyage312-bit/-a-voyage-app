@@ -145,13 +145,13 @@ function generateMockFlights(origin: string, destination: string, date: string) 
         const durationH = isDirect ? Math.floor(Math.random() * 3) + 2 : Math.floor(Math.random() * 6) + 7;
         const durationM = Math.floor(Math.random() * 60);
         const duration = `PT${durationH}H${durationM}M`;
-
-        const segments = [];
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const segments: any[] = [];
 
         if (isDirect) {
             segments.push({
-                departure: { iataCode: origin, at: `${date}T${8 + (i % 4)}:00:00` },
-                arrival: { iataCode: destination, at: `${date}T${8 + (i % 4) + durationH}:30:00` },
+                departure: { iataCode: origin, at: `${date}T${pad(8 + (i % 4))}:00:00` },
+                arrival: { iataCode: destination, at: `${date}T${pad(8 + (i % 4) + durationH)}:30:00` },
                 carrierCode: airline.code,
                 number: `${100 + i}`,
                 duration: duration,
@@ -162,8 +162,8 @@ function generateMockFlights(origin: string, destination: string, date: string) 
             const stopover = airline.code === 'AT' ? 'CMN' : airline.code === 'TK' ? 'IST' : airline.code === 'AF' ? 'CDG' : 'MAD';
 
             segments.push({
-                departure: { iataCode: origin, at: `${date}T${6 + (i % 4)}:00:00` },
-                arrival: { iataCode: stopover, at: `${date}T${6 + (i % 4) + 4}:00:00` },
+                departure: { iataCode: origin, at: `${date}T${pad(6 + (i % 4))}:00:00` },
+                arrival: { iataCode: stopover, at: `${date}T${pad(6 + (i % 4) + 4)}:00:00` },
                 carrierCode: airline.code,
                 number: `${200 + i}`,
                 duration: 'PT4H0M',
@@ -171,8 +171,8 @@ function generateMockFlights(origin: string, destination: string, date: string) 
             });
 
             segments.push({
-                departure: { iataCode: stopover, at: `${date}T${6 + (i % 4) + 6}:00:00` },
-                arrival: { iataCode: destination, at: `${date}T${6 + (i % 4) + durationH}:00:00` },
+                departure: { iataCode: stopover, at: `${date}T${pad(6 + (i % 4) + 6)}:00:00` },
+                arrival: { iataCode: destination, at: `${date}T${pad(6 + (i % 4) + durationH)}:00:00` },
                 carrierCode: airline.code,
                 number: `${300 + i}`,
                 duration: 'PT3H0M',

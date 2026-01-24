@@ -71,7 +71,7 @@ export default function BookingsPage() {
                         id: b.id.substring(0, 8),
                         type: b.type,
                         status: b.status,
-                        date: new Date(b.created_at).toLocaleDateString(),
+                        date: b.created_at ? new Date(b.created_at).toLocaleDateString() : 'N/A',
                         title: title,
                         details: desc,
                         price: `${b.price_amount} ${b.price_currency}`,
