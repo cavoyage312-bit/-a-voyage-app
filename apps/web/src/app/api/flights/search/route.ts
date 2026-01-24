@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
             });
         } catch (e: any) {
             console.warn('Amadeus Flight API failed, using fallback:', e.message);
-            data = { data: generateMockFlights(resolvedOrigin, resolvedDestination, date!) };
+            data = generateMockFlights(resolvedOrigin, resolvedDestination, date!);
         }
 
         // Si Amadeus renvoie OK mais sans données, on peut aussi fallback (optionnel)
