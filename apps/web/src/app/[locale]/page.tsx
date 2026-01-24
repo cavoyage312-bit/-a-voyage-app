@@ -14,6 +14,7 @@ import {
     ArrowRight,
     Plane,
     Building2,
+    Home,
     Car,
     Train,
     Sparkles,
@@ -62,6 +63,15 @@ export default function HomePage() {
             href: `/${locale}/transit`,
             color: 'bg-purple-500',
             image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 'apartments',
+            title: t('services.apartments.title'),
+            desc: t('services.apartments.desc'),
+            icon: Home,
+            href: `/${locale}/apartments`,
+            color: 'bg-rose-500',
+            image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80'
         }
     ];
 
@@ -141,7 +151,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Services Grid (Super App Buttons) */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
                         {services.map((service, index) => (
                             <motion.div
                                 key={service.id}

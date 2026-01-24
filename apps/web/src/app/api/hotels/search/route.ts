@@ -65,22 +65,35 @@ export async function GET(request: NextRequest) {
 
 function generateMockHotels(destination: string) {
     const hotelTypes = [
-        { name: 'Palace', suffix: 'Luxury & Spa', basePrice: 250 },
-        { name: 'Grand Hotel', suffix: 'Plaza', basePrice: 150 },
-        { name: 'Résidence', suffix: 'Hôtelière', basePrice: 80 },
-        { name: 'Hôtel', suffix: 'des Voyageurs', basePrice: 60 },
-        { name: 'Apparthôtel', suffix: 'Confort', basePrice: 100 },
+        { name: 'Palace', suffix: 'Luxury & Spa', basePrice: 250, stars: 5 },
+        { name: 'Grand Hotel', suffix: 'Plaza', basePrice: 150, stars: 4 },
+        { name: 'Boutique Hotel', suffix: 'Charm', basePrice: 120, stars: 4 },
+        { name: 'Eco-Lodge', suffix: 'Nature', basePrice: 90, stars: 3 },
+        { name: 'Business Suite', suffix: 'Executive', basePrice: 180, stars: 5 },
+        { name: 'Résidence', suffix: 'Hôtelière', basePrice: 80, stars: 3 },
+        { name: 'Apparthôtel', suffix: 'Confort', basePrice: 100, stars: 3 },
+    ];
+
+    const images = [
+        '1566073771259-6a8506099945', // Pool luxury
+        '1582719508461-905c67377150', // Room cozy
+        '1542314831-068cd1dbfeeb', // Exterior architecture
+        '1571003123894-1f0594d2b5d9', // Interior chic
+        '1520250497591-112f2f40a3f4', // Resort beach
+        '1445019980597-93fa2acb246c', // Suite view
+        '1551882547-ff43c63efa7c'  // Modern lobby
     ];
 
     return hotelTypes.map((type, i) => ({
         hotelId: `mock-${destination}-${i}`,
         name: `${type.name} ${destination} ${type.suffix}`,
-        rating: Math.floor(Math.random() * (5 - 3) + 3),
+        rating: type.stars,
         price: {
             amount: type.basePrice + Math.floor(Math.random() * 50),
             currency: 'EUR'
         },
-        image: `https://images.unsplash.com/photo-${['1566073771259-6a8506099945', '1582719508461-905c67377150', '1542314831-068cd1dbfeeb', '1571003123894-1f0594d2b5d9'][Math.floor(Math.random() * 4)]}?auto=format&fit=crop&w=400&q=80`,
-        address: { cityName: destination }
+        image: `https://images.unsplash.com/photo-${images[i % images.length]}?auto=format&fit=crop&w=800&q=80`,
+        address: { cityName: destination },
+        amenities: ['WIFI', 'AIR_CONDITIONING', 'RESTAURANT', 'PARKING'].slice(0, 2 + (i % 3))
     }));
 }

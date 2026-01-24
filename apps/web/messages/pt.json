@@ -51,6 +51,10 @@
             "transit": {
                 "title": "Transportes",
                 "desc": "Autocarro, Metro e Itinerarios"
+            },
+            "apartments": {
+                "title": "Apartamentos",
+                "desc": "Estadias em casa"
             }
         },
         "features": {

@@ -16,6 +16,9 @@ interface Apartment {
     rating?: number;
     max_guests: number;
     amenities: any;
+    partners?: {
+        company_name: string;
+    };
 }
 
 export function ApartmentCard({ apartment, locale }: { apartment: Apartment; locale: string }) {
@@ -29,27 +32,34 @@ export function ApartmentCard({ apartment, locale }: { apartment: Apartment; loc
         >
             <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                    src={apartment.images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80'}
+                    src={apartment.images?.[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80'}
                     alt={apartment.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+
+                {/* Badge Partenaire */}
+                {apartment.partners?.company_name && (
+                    <div className="absolute top-3 left-3 bg-primary-600 text-white px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-lg">
+                        Partenaire Local
+                    </div>
+                )}
+
                 <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">
                     <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                    <span>{apartment.rating || 'New'}</span>
+                    <span>{apartment.rating || '4.8'}</span>
                 </div>
             </div>
 
             <div className="p-4">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-bold text-lg text-slate-900 group-hover:text-primary-700 transition-colors line-clamp-1">
+                <div className="flex flex-col gap-1 mb-3">
+                    <h3 className="font-bold text-slate-900 group-hover:text-primary-700 transition-colors line-clamp-1 leading-tight">
                         {apartment.title}
                     </h3>
-                </div>
-
-                <div className="flex items-center gap-2 text-slate-500 text-sm mb-3">
-                    <MapPin className="w-4 h-4 text-primary-500" />
-                    <span>{apartment.city}</span>
+                    <div className="flex items-center gap-1 text-slate-500 text-xs font-medium">
+                        <MapPin className="w-3 h-3 text-primary-500" />
+                        <span>{apartment.city} • {apartment.partners?.company_name || 'Hébergeur Privé'}</span>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-slate-500 mb-4 px-3 py-2 bg-slate-50 rounded-lg">

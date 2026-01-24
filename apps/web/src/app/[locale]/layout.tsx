@@ -1,11 +1,21 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, unstable_setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import '@/styles/globals.css';
+import { Metadata } from 'next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PartnerBanner } from '@/components/layout/PartnerBanner';
 import { locales } from '@/routing';
+import '@/styles/globals.css';
+
+export const metadata: Metadata = {
+    title: 'Ça Voyage',
+    description: 'Voyagez ensemble, simplement.',
+    icons: {
+        icon: '/logo.png',
+        apple: '/logo.png',
+    },
+};
 
 export function generateStaticParams() {
     return locales.map((locale) => ({ locale }));

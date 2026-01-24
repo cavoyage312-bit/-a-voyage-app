@@ -51,6 +51,10 @@
             "transit": {
                 "title": "Transports",
                 "desc": "Bus, Metro & Itineraries"
+            },
+            "apartments": {
+                "title": "Apartments",
+                "desc": "Home stays & unique places"
             }
         },
         "features": {

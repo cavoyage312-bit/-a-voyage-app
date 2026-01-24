@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
 
         // Si Amadeus renvoie OK mais sans données, on peut aussi fallback (optionnel)
         if (!data.data || data.data.length === 0) {
-            data.data = generateMockFlights(resolvedOrigin, resolvedDestination, date!);
+            data = generateMockFlights(resolvedOrigin, resolvedDestination, date!);
         }
 
         // --- 4. Application des Marges ---
@@ -133,11 +133,52 @@ function generateMockFlights(origin: string, destination: string, date: string) 
         { code: 'SN', name: 'Brussels Airlines' },
         { code: 'HC', name: 'Air Sénégal' },
         { code: 'AT', name: 'Royal Air Maroc' },
+        { code: 'EK', name: 'Emirates' },
+        { code: 'TK', name: 'Turkish Airlines' },
+        { code: 'QR', name: 'Qatar Airways' },
+        { code: 'IB', name: 'Iberia' },
     ];
 
-    return airlines.map((airline, i) => {
-        const basePrice = 300 + (i * 100) + Math.floor(Math.random() * 50);
-        const duration = `PT${Math.floor(Math.random() * 5) + 2}H${Math.floor(Math.random() * 60)}M`;
+    const flights = airlines.map((airline, i) => {
+        const isDirect = i % 2 === 0;
+        const basePrice = 450 + (i * 80) + Math.floor(Math.random() * 50);
+        const durationH = isDirect ? Math.floor(Math.random() * 3) + 2 : Math.floor(Math.random() * 6) + 7;
+        const durationM = Math.floor(Math.random() * 60);
+        const duration = `PT${durationH}H${durationM}M`;
+
+        const segments = [];
+
+        if (isDirect) {
+            segments.push({
+                departure: { iataCode: origin, at: `${date}T${8 + (i % 4)}:00:00` },
+                arrival: { iataCode: destination, at: `${date}T${8 + (i % 4) + durationH}:30:00` },
+                carrierCode: airline.code,
+                number: `${100 + i}`,
+                duration: duration,
+                numberOfStops: 0
+            });
+        } else {
+            // Un vol avec escale (VIA Casablanca ou Paris ou Istanbul selon la compagnie)
+            const stopover = airline.code === 'AT' ? 'CMN' : airline.code === 'TK' ? 'IST' : airline.code === 'AF' ? 'CDG' : 'MAD';
+
+            segments.push({
+                departure: { iataCode: origin, at: `${date}T${6 + (i % 4)}:00:00` },
+                arrival: { iataCode: stopover, at: `${date}T${6 + (i % 4) + 4}:00:00` },
+                carrierCode: airline.code,
+                number: `${200 + i}`,
+                duration: 'PT4H0M',
+                numberOfStops: 0
+            });
+
+            segments.push({
+                departure: { iataCode: stopover, at: `${date}T${6 + (i % 4) + 6}:00:00` },
+                arrival: { iataCode: destination, at: `${date}T${6 + (i % 4) + durationH}:00:00` },
+                carrierCode: airline.code,
+                number: `${300 + i}`,
+                duration: 'PT3H0M',
+                numberOfStops: 0
+            });
+        }
 
         return {
             id: `mock-${origin}-${destination}-${i}`,
@@ -147,15 +188,26 @@ function generateMockFlights(origin: string, destination: string, date: string) 
             },
             itineraries: [{
                 duration: duration,
-                segments: [{
-                    departure: { iataCode: origin, at: `${date}T${8 + i}:00:00` },
-                    arrival: { iataCode: destination, at: `${date}T${12 + i}:30:00` },
-                    carrierCode: airline.code,
-                    number: `${100 + i}`,
-                    duration: duration
-                }]
+                segments: segments
             }],
-            travelerPricings: []
+            travelerPricings: [{
+                fareDetailsBySegment: segments.map(() => ({
+                    cabin: 'ECONOMY',
+                    includedCheckedBags: { quantity: 1 }
+                }))
+            }]
         };
     });
+
+    const carriers: any = {};
+    airlines.forEach(a => {
+        carriers[a.code] = a.name;
+    });
+
+    return {
+        data: flights,
+        dictionaries: {
+            carriers
+        }
+    };
 }

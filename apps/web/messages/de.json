@@ -51,6 +51,10 @@
             "transit": {
                 "title": "Verkehrsmittel",
                 "desc": "Bus, U-Bahn & Routen"
+            },
+            "apartments": {
+                "title": "Apartments",
+                "desc": "Privatunterkünfte"
             }
         },
         "features": {
