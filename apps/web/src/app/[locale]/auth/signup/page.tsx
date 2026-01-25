@@ -5,15 +5,22 @@ import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Check, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
     const t = useTranslations('auth');
     const params = useParams();
     const locale = params.locale as string;
 
+    const router = useRouter();
+    const supabase = createClient();
+
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -23,10 +30,47 @@ export default function SignupPage() {
         acceptTerms: false,
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle signup
-        console.log('Signup:', formData);
+        setLoading(true);
+        setError(null);
+
+        if (formData.password !== formData.confirmPassword) {
+            setError("Les mots de passe ne correspondent pas.");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const { data, error: signUpError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: {
+                        first_name: formData.firstName,
+                        last_name: formData.lastName,
+                    }
+                }
+            });
+
+            if (signUpError) {
+                setError(signUpError.message);
+                setLoading(false);
+                return;
+            }
+
+            // Note: If email confirmation is enabled, user might not be "logged in" yet.
+            // If it's disabled, they are.
+            if (data.user) {
+                // The profile is usually created via trigger in Supabase, 
+                // but let's assume we want to redirect to home.
+                router.push(`/${locale}`);
+                router.refresh();
+            }
+        } catch (err) {
+            setError("Une erreur inattendue est survenue.");
+            setLoading(false);
+        }
     };
 
     const benefits = [
@@ -84,6 +128,12 @@ export default function SignupPage() {
                             Créez votre compte gratuitement
                         </p>
                     </div>
+
+                    {error && (
+                        <div className="mb-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
+                            {error}
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
@@ -215,9 +265,15 @@ export default function SignupPage() {
                             </span>
                         </label>
 
-                        <button type="submit" className="btn btn-primary btn-lg w-full">
-                            Créer mon compte
-                            <ArrowRight className="w-5 h-5" />
+                        <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full">
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <>
+                                    Créer mon compte
+                                    <ArrowRight className="w-5 h-5" />
+                                </>
+                            )}
                         </button>
                     </form>
 

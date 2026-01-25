@@ -5,24 +5,53 @@ import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const t = useTranslations('auth');
     const params = useParams();
     const locale = params.locale as string;
 
+    const router = useRouter();
+    const supabase = createClient();
+
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login
-        console.log('Login:', formData);
+        setLoading(true);
+        setError(null);
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const next = searchParams.get('next') || `/${locale}`;
+
+        try {
+            const { error: authError } = await supabase.auth.signInWithPassword({
+                email: formData.email,
+                password: formData.password,
+            });
+
+            if (authError) {
+                setError(authError.message);
+                setLoading(false);
+                return;
+            }
+
+            router.push(next);
+            router.refresh();
+        } catch (err) {
+            setError("Une erreur inattendue est survenue.");
+            setLoading(false);
+        }
     };
 
     return (
@@ -43,7 +72,14 @@ export default function LoginPage() {
                         </p>
                     </div>
 
+                    {error && (
+                        <div className="mb-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
+                            {error}
+                        </div>
+                    )}
+
                     <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* ... existing fields ... */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">
                                 {t('email')}
@@ -106,9 +142,15 @@ export default function LoginPage() {
                             </Link>
                         </div>
 
-                        <button type="submit" className="btn btn-primary btn-lg w-full">
-                            {t('login')}
-                            <ArrowRight className="w-5 h-5" />
+                        <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full">
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <>
+                                    {t('login')}
+                                    <ArrowRight className="w-5 h-5" />
+                                </>
+                            )}
                         </button>
                     </form>
 

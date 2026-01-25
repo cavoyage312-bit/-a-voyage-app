@@ -8,6 +8,9 @@ import { useParams, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { locales, localeNames, localeFlags, Locale } from '@/routing';
+import { createClient } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import { LogOut } from 'lucide-react';
 
 export function Header() {
     const t = useTranslations('nav');
@@ -17,6 +20,42 @@ export function Header() {
     const params = useParams();
     const pathname = usePathname();
     const locale = params.locale as Locale;
+    const router = useRouter();
+    const supabase = createClient();
+
+    const [user, setUser] = useState<any>(null);
+    const [profile, setProfile] = useState<any>(null);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+                setProfile(profile);
+            }
+        };
+
+        getUser();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+            if (!session) {
+                setProfile(null);
+            } else {
+                getUser();
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
 
     const navItems = [
         { href: `/${locale}/flights`, label: t('flights'), icon: <Plane className="w-5 h-5" /> },
@@ -32,10 +71,19 @@ export function Header() {
             if (langRef.current && !langRef.current.contains(event.target as Node)) {
                 setIsLangOpen(false);
             }
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setIsProfileOpen(false);
+            }
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push(`/${locale}`);
+        router.refresh();
+    };
 
     const switchLocale = (newLocale: Locale) => {
         const newPathname = pathname.replace(`/${locale}`, `/${newLocale}`);
@@ -130,19 +178,84 @@ export function Header() {
 
                             {/* Auth Group */}
                             <div className="hidden md:flex items-center gap-3 xl:gap-4 ml-2">
-                                <Link
-                                    href={`/${locale}/auth/login`}
-                                    className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:text-teal-300 transition-colors whitespace-nowrap"
-                                >
-                                    {t('login')}
-                                </Link>
-                                <Link
-                                    href={`/${locale}/auth/signup`}
-                                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-500 text-primary-900 rounded-xl font-black text-sm hover:from-teal-300 hover:to-emerald-400 hover:shadow-[0_10px_25px_rgba(20,184,166,0.4)] active:scale-95 transition-all shadow-lg whitespace-nowrap"
-                                >
-                                    <User className="w-4 h-4" />
-                                    {t('signup')}
-                                </Link>
+                                {user ? (
+                                    <div className="relative" ref={profileRef}>
+                                        <button
+                                            onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                            className="flex items-center gap-3 bg-white/10 hover:bg-white/20 p-1.5 pr-4 rounded-2xl border border-white/10 transition-all group"
+                                        >
+                                            <div className="w-10 h-10 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-xl flex items-center justify-center text-primary-900 font-black shadow-lg">
+                                                {profile?.first_name?.[0]}{profile?.last_name?.[0] || user.email[0].toUpperCase()}
+                                            </div>
+                                            <div className="text-left hidden xl:block">
+                                                <p className="text-xs font-black text-white leading-none mb-1">{profile?.first_name || 'Utilisateur'}</p>
+                                                <p className="text-[10px] text-white/50 leading-none">Compte {profile?.role || 'Basic'}</p>
+                                            </div>
+                                            <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {isProfileOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    className="absolute top-full right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50 py-2"
+                                                >
+                                                    <div className="px-4 py-3 border-b border-slate-50 mb-1">
+                                                        <p className="text-sm font-bold text-slate-900">{profile?.first_name} {profile?.last_name}</p>
+                                                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                                                    </div>
+
+                                                    {profile?.role === 'admin' && (
+                                                        <Link href={`/${locale}/admin`} className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                                                            <Settings className="w-4 h-4 text-slate-400" />
+                                                            Administration
+                                                        </Link>
+                                                    )}
+
+                                                    {(profile?.role === 'partner' || profile?.role === 'admin') && (
+                                                        <Link href={`/${locale}/partner`} className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                                                            <Briefcase className="w-4 h-4 text-slate-400" />
+                                                            Espace Partenaire
+                                                        </Link>
+                                                    )}
+
+                                                    <Link href={`/${locale}/profile`} className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                                                        <User className="w-4 h-4 text-slate-400" />
+                                                        Mon Profil
+                                                    </Link>
+
+                                                    <div className="h-px bg-slate-50 my-1" />
+
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+                                                    >
+                                                        <LogOut className="w-4 h-4" />
+                                                        Déconnexion
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={`/${locale}/auth/login`}
+                                            className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:text-teal-300 transition-colors whitespace-nowrap"
+                                        >
+                                            {t('login')}
+                                        </Link>
+                                        <Link
+                                            href={`/${locale}/auth/signup`}
+                                            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-500 text-primary-900 rounded-xl font-black text-sm hover:from-teal-300 hover:to-emerald-400 hover:shadow-[0_10px_25px_rgba(20,184,166,0.4)] active:scale-95 transition-all shadow-lg whitespace-nowrap"
+                                        >
+                                            <User className="w-4 h-4" />
+                                            {t('signup')}
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -192,20 +305,61 @@ export function Header() {
 
                                 {/* Mobile Auth & Social */}
                                 <div className="flex flex-col gap-4">
-                                    <Link
-                                        href={`/${locale}/auth/login`}
-                                        className="py-5 border-2 border-white/20 text-white hover:bg-white/10 rounded-2xl text-center font-bold text-lg active:scale-95 transition-all"
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        {t('login')}
-                                    </Link>
-                                    <Link
-                                        href={`/${locale}/auth/signup`}
-                                        className="py-5 bg-gradient-to-r from-teal-400 to-emerald-500 text-primary-900 rounded-2xl text-center font-black text-lg shadow-lg shadow-teal-500/20 active:scale-95 transition-all"
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        {t('signup')}
-                                    </Link>
+                                    {user ? (
+                                        <>
+                                            <div className="flex items-center gap-4 bg-white/10 p-4 rounded-2xl border border-white/10">
+                                                <div className="w-14 h-14 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center text-primary-900 font-black text-2xl">
+                                                    {profile?.first_name?.[0]}{profile?.last_name?.[0] || user.email[0].toUpperCase()}
+                                                </div>
+                                                <div>
+                                                    <p className="text-white font-bold text-lg leading-tight">{profile?.first_name} {profile?.last_name}</p>
+                                                    <p className="text-white/50 text-sm">{user.email}</p>
+                                                </div>
+                                            </div>
+
+                                            <Link
+                                                href={`/${locale}/profile`}
+                                                className="py-5 border-2 border-white/20 text-white hover:bg-white/10 rounded-2xl text-center font-bold text-lg active:scale-95 transition-all"
+                                                onClick={() => setIsMenuOpen(false)}
+                                            >
+                                                Mon Profil
+                                            </Link>
+
+                                            {profile?.role === 'admin' && (
+                                                <Link
+                                                    href={`/${locale}/admin`}
+                                                    className="py-5 border-2 border-white/20 text-white hover:bg-white/10 rounded-2xl text-center font-bold text-lg active:scale-95 transition-all"
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                >
+                                                    Administration
+                                                </Link>
+                                            )}
+
+                                            <button
+                                                onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                                                className="py-5 bg-red-500/10 text-red-500 border-2 border-red-500/20 rounded-2xl text-center font-black text-lg active:scale-95 transition-all"
+                                            >
+                                                Déconnexion
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                href={`/${locale}/auth/login`}
+                                                className="py-5 border-2 border-white/20 text-white hover:bg-white/10 rounded-2xl text-center font-bold text-lg active:scale-95 transition-all"
+                                                onClick={() => setIsMenuOpen(false)}
+                                            >
+                                                {t('login')}
+                                            </Link>
+                                            <Link
+                                                href={`/${locale}/auth/signup`}
+                                                className="py-5 bg-gradient-to-r from-teal-400 to-emerald-500 text-primary-900 rounded-2xl text-center font-black text-lg shadow-lg shadow-teal-500/20 active:scale-95 transition-all"
+                                                onClick={() => setIsMenuOpen(false)}
+                                            >
+                                                {t('signup')}
+                                            </Link>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Language Selector Mobile */}

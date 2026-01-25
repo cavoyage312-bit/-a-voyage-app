@@ -97,12 +97,40 @@ export default function PartnerRegisterPage() {
         },
     ];
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (step === 1 && partnerType) {
             setStep(2);
         } else if (step === 2) {
-            setSubmitted(true);
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch('/api/partners/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        partnerType,
+                    }),
+                });
+
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || 'Failed to submit application');
+                }
+
+                setSubmitted(true);
+            } catch (err: any) {
+                console.error('Registration error:', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -432,12 +460,18 @@ export default function PartnerRegisterPage() {
                                     </div>
                                 </div>
 
+                                {error && (
+                                    <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100 italic-text-none">
+                                        {error}
+                                    </div>
+                                )}
+
                                 <button
                                     type="submit"
-                                    disabled={!formData.acceptTerms}
+                                    disabled={!formData.acceptTerms || loading}
                                     className="btn btn-primary btn-lg w-full mt-6"
                                 >
-                                    Envoyer ma demande
+                                    {loading ? 'Envoi en cours...' : 'Envoyer ma demande'}
                                 </button>
                             </motion.div>
                         )}
